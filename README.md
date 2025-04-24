@@ -1,1 +1,1 @@
-## [LIVE DEMO](https://v0-weather-app-zeta-ten.vercel.app/)
+## [LIVE DEMO](https://skycast.eltonbaidoo.com/)
