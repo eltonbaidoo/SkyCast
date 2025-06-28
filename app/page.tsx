@@ -246,7 +246,7 @@ export default function WeatherApp() {
           <p className="text-muted-foreground">Check the weather and time for any city around the world</p>
         </div>
 
-        <Card className="mb-6 border-2 border-weather-blue/20 shadow-lg dark:border-weather-blue/10 dark:bg-gray-800/60 rounded-[2rem]">
+        <Card className="mb-6 border-2 border-weather-blue/20 shadow-lg dark:border-weather-blue/10 dark:bg-gray-800/60 rounded-[2rem] glass-interactive">
           <CardContent className="pt-6">
             <div className="flex flex-col gap-4">
               <CitySearch onSearch={handleSearch} loading={loading} />
@@ -316,7 +316,7 @@ export default function WeatherApp() {
             </TabsList>
 
             <TabsContent value="current">
-              <Card className="border-2 border-weather-blue/20 shadow-lg overflow-hidden dark:border-weather-blue/10 dark:bg-gray-800/60 rounded-[2rem]">
+              <Card className="border-2 border-weather-blue/20 shadow-lg overflow-hidden dark:border-weather-blue/10 dark:bg-gray-800/60 rounded-[2rem] glass-card">
                 <div className="absolute top-0 right-0 w-32 h-32 -mt-8 -mr-8 bg-weather-blue/10 rounded-full blur-2xl"></div>
                 <div className="absolute bottom-0 left-0 w-32 h-32 -mb-8 -ml-8 bg-weather-teal/10 rounded-full blur-2xl"></div>
 
@@ -355,7 +355,7 @@ export default function WeatherApp() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                     <div
-                      className={`flex flex-col items-center p-4 rounded-2xl ${getWeatherCardColor(weather.weather[0].main)}`}
+                      className={`flex flex-col items-center p-4 rounded-2xl transition-all duration-150 ease-out hover:shadow-lg hover:scale-105 glass-interactive ${getWeatherCardColor(weather.weather[0].main)}`}
                     >
                       <div className="bg-white/50 dark:bg-gray-800/50 p-2 rounded-full mb-2">
                         <img
@@ -366,15 +366,15 @@ export default function WeatherApp() {
                       </div>
                       <span className="text-sm font-medium capitalize">{weather.weather[0].description}</span>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-4 bg-weather-blue/10 dark:bg-weather-blue/5 rounded-2xl">
+                    <div className="flex flex-col items-center justify-center p-4 bg-weather-blue/10 dark:bg-weather-blue/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
                       <span className="text-sm text-muted-foreground">Humidity</span>
                       <span className="text-xl font-medium">{weather.main.humidity}%</span>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-4 bg-weather-cyan/10 dark:bg-weather-cyan/5 rounded-2xl">
+                    <div className="flex flex-col items-center justify-center p-4 bg-weather-cyan/10 dark:bg-weather-cyan/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
                       <span className="text-sm text-muted-foreground">Wind</span>
                       <span className="text-xl font-medium">{getWindSpeed(weather.wind.speed)}</span>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-4 bg-weather-teal/10 dark:bg-weather-teal/5 rounded-2xl">
+                    <div className="flex flex-col items-center justify-center p-4 bg-weather-teal/10 dark:bg-weather-teal/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
                       <span className="text-sm text-muted-foreground">Pressure</span>
                       <span className="text-xl font-medium">{weather.main.pressure} hPa</span>
                     </div>
@@ -384,7 +384,7 @@ export default function WeatherApp() {
             </TabsContent>
 
             <TabsContent value="forecast">
-              <Card className="border-2 border-weather-blue/20 shadow-lg overflow-hidden dark:border-weather-blue/10 dark:bg-gray-800/60 rounded-[2rem]">
+              <Card className="border-2 border-weather-blue/20 shadow-lg overflow-hidden dark:border-weather-blue/10 dark:bg-gray-800/60 rounded-[2rem] glass-card">
                 <div className="absolute top-0 right-0 w-32 h-32 -mt-8 -mr-8 bg-weather-blue/10 rounded-full blur-2xl"></div>
                 <div className="absolute bottom-0 left-0 w-32 h-32 -mb-8 -ml-8 bg-weather-teal/10 rounded-full blur-2xl"></div>
 
@@ -406,7 +406,7 @@ export default function WeatherApp() {
                     {forecast.map((day, index) => (
                       <div
                         key={index}
-                        className={`flex flex-col items-center p-4 rounded-2xl ${getWeatherCardColor(day.weather[0].main)} hover:shadow-md transition-shadow`}
+                        className={`flex flex-col items-center p-4 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg hover:scale-105 ${getWeatherCardColor(day.weather[0].main)}`}
                       >
                         <div className="font-medium">{formatDate(day.dt)}</div>
                         <div className="bg-white/50 dark:bg-gray-800/50 p-1 rounded-full my-2">

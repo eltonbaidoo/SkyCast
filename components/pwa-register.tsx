@@ -68,7 +68,7 @@ export function PWARegister() {
       onClick={handleInstallClick}
       variant="outline"
       size="sm"
-      className="flex items-center gap-1 bg-white/80 backdrop-blur-sm rounded-full border-2 border-weather-blue/20"
+      className="flex items-center gap-1 bg-white/80 backdrop-blur-sm rounded-full border-2 border-weather-blue/20 glass-button"
     >
       <Download className="h-4 w-4" />
       Install App

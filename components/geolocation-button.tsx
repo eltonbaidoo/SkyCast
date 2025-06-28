@@ -95,7 +95,7 @@ export function GeolocationButton({ onSearch, isLoading }: GeolocationButtonProp
       variant="outline"
       onClick={handleGetLocation}
       disabled={gettingLocation || isLoading}
-      className="flex items-center gap-2 rounded-full"
+      className="flex items-center gap-2 rounded-full glass-button bg-transparent"
     >
       {gettingLocation ? <Loader2 className="h-4 w-4 animate-spin" /> : <MapPin className="h-4 w-4" />}
       Use My Location
