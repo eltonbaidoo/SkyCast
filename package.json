@@ -9,6 +9,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@radix-ui/react-label": "latest",
+    "@radix-ui/react-scroll-area": "latest",
     "@radix-ui/react-slot": "latest",
     "@radix-ui/react-switch": "latest",
     "@radix-ui/react-tabs": "latest",
