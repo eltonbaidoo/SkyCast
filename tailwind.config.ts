@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss"
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -9,6 +9,7 @@ const config: Config = {
     "./src/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
+  prefix: "",
   theme: {
     container: {
       center: true,
@@ -24,16 +25,6 @@ const config: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        weather: {
-          blue: "#4dabf7",
-          lightBlue: "#74c0fc",
-          cyan: "#3bc9db",
-          teal: "#38d9a9",
-          green: "#69db7c",
-          yellow: "#ffd43b",
-          orange: "#ffa94d",
-          red: "#ff6b6b",
-        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -62,6 +53,13 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Weather-specific colors
+        "weather-blue": "#4dabf7",
+        "weather-lightBlue": "#74c0fc",
+        "weather-cyan": "#22d3ee",
+        "weather-teal": "#2dd4bf",
+        "weather-yellow": "#fbbf24",
+        "weather-red": "#f87171",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -82,9 +80,12 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      backgroundImage: {
+        "radial-gradient": "radial-gradient(ellipse at center, var(--tw-gradient-stops))",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+} satisfies Config
 
 export default config

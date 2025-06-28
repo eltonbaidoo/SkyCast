@@ -233,7 +233,7 @@ export default function WeatherApp() {
       {weather && <WeatherBackground condition={weather.weather[0].main} />}
       <CircularDecorations />
 
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="glass-panel container mx-auto px-8 py-8 max-w-4xl">
         <div className="flex justify-between items-center mb-4 px-2">
           <PWARegister />
           <ThemeToggle />
