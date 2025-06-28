@@ -16,7 +16,7 @@ export const metadata = {
     ],
     apple: [{ url: "/icons/icon-192x192.svg" }],
   },
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({ children }) {
@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <main className="min-h-screen bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-center p-4">
+          <main className="min-h-screen bg-radial-gradient from-cyan-50 via-sky-50 to-sky-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 flex flex-col items-center justify-center p-4">
             {children}
           </main>
           <Toaster />
