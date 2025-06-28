@@ -84,8 +84,10 @@ export function Favorites({ currentCity, onSelectCity }: FavoritesProps) {
                     onSelectCity(city)
                     setIsOpen(false)
                   }}
-                  className={`flex items-center justify-between p-2 rounded-xl cursor-pointer transition-all duration-150 ease-out glass-interactive ${
-                    city === currentCity ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                  className={`flex items-center justify-between p-2 rounded-xl cursor-pointer transition-all duration-150 ease-out hover:shadow-lg ${
+                    city === currentCity
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted/80 bg-white/20 dark:bg-gray-800/30 backdrop-blur-sm"
                   }`}
                 >
                   <span className="truncate">{city}</span>
