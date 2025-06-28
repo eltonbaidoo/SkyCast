@@ -54,20 +54,27 @@ export function Favorites({ currentCity, onSelectCity }: FavoritesProps) {
           onClick={addToFavorites}
           disabled={!currentCity || isFavorite}
           title={isFavorite ? "Already in favorites" : "Add to favorites"}
-          className={isFavorite ? "bg-amber-400 hover:bg-amber-500 text-black border-none" : ""}
+          className={
+            isFavorite ? "bg-amber-400 hover:bg-amber-500 text-black border-none glass-button" : "glass-button"
+          }
         >
           <Star className={`h-4 w-4 ${isFavorite ? "fill-black" : ""}`} />
         </Button>
 
         {favorites.length > 0 && (
-          <Button variant="outline" size="sm" onClick={() => setIsOpen(!isOpen)} className="text-xs rounded-full">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-xs rounded-full glass-button"
+          >
             {isOpen ? "Hide Favorites" : `Favorites (${favorites.length})`}
           </Button>
         )}
       </div>
 
       {isOpen && favorites.length > 0 && (
-        <Card className="absolute right-0 mt-2 p-2 z-10 w-64 shadow-lg rounded-2xl">
+        <Card className="absolute right-0 mt-2 p-2 z-10 w-64 shadow-lg rounded-2xl glass-card">
           <ScrollArea className="max-h-60">
             <div className="space-y-1">
               {favorites.map((city) => (
@@ -77,7 +84,7 @@ export function Favorites({ currentCity, onSelectCity }: FavoritesProps) {
                     onSelectCity(city)
                     setIsOpen(false)
                   }}
-                  className={`flex items-center justify-between p-2 rounded-xl cursor-pointer ${
+                  className={`flex items-center justify-between p-2 rounded-xl cursor-pointer transition-all duration-150 ease-out glass-interactive ${
                     city === currentCity ? "bg-primary text-primary-foreground" : "hover:bg-muted"
                   }`}
                 >
