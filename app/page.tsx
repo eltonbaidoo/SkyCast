@@ -15,26 +15,8 @@ import { Favorites } from "@/components/favorites"
 import { GeolocationButton } from "@/components/geolocation-button"
 import { PWARegister } from "@/components/pwa-register"
 import { CircularDecorations } from "@/components/circular-decorations"
+import { SimpleMap } from "@/components/simple-map"
 import { useToast } from "@/hooks/use-toast"
-import dynamic from "next/dynamic"
-
-// Dynamically import the WeatherMap component with no SSR
-const WeatherMap = dynamic(() => import("@/components/weather-map"), {
-  ssr: false,
-  loading: () => (
-    <Card className="h-[400px] flex items-center justify-center rounded-[2rem]">
-      <div className="text-center">
-        <div className="animate-spin h-8 w-8 border-4 border-weather-blue border-t-transparent rounded-full mx-auto mb-4"></div>
-        <p>Loading map...</p>
-      </div>
-    </Card>
-  ),
-})
-
-// Fallback map component
-const MapFallback = dynamic(() => import("@/components/map-fallback"), {
-  ssr: false,
-})
 
 export default function WeatherApp() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -44,7 +26,6 @@ export default function WeatherApp() {
   const [error, setError] = useState("")
   const [isFahrenheit, setIsFahrenheit] = useState(false)
   const [isMph, setIsMph] = useState(false)
-  const [useMapFallback, setUseMapFallback] = useState(false)
   const [activeTab, setActiveTab] = useState("current")
   const { toast } = useToast()
 
@@ -160,21 +141,6 @@ export default function WeatherApp() {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    // Check if we should use the fallback map
-    const checkLeaflet = async () => {
-      try {
-        await import("leaflet")
-        setUseMapFallback(false)
-      } catch (error) {
-        console.error("Leaflet import failed, using fallback map", error)
-        setUseMapFallback(true)
-      }
-    }
-
-    checkLeaflet()
-  }, [])
 
   const handleSearch = (city) => {
     setSearchQuery(city)
@@ -336,9 +302,7 @@ export default function WeatherApp() {
                             day: "numeric",
                           })}
                         </span>
-                        {/* Add a separator dot for desktop view */}
                         <span className="hidden sm:block">•</span>
-                        {/* Add the local time component */}
                         <LocalTime timezone={weather.timezone} />
                       </CardDescription>
                     </div>
@@ -432,26 +396,17 @@ export default function WeatherApp() {
             </TabsContent>
 
             <TabsContent value="map">
-              {weather &&
-                (useMapFallback ? (
-                  <MapFallback
-                    lat={weather.coord.lat}
-                    lon={weather.coord.lon}
-                    city={weather.name}
-                    country={weather.sys.country}
-                  />
-                ) : (
-                  <WeatherMap
-                    city={weather.name}
-                    country={weather.sys.country}
-                    lat={weather.coord.lat}
-                    lon={weather.coord.lon}
-                    temp={weather.main.temp}
-                    description={weather.weather[0].description}
-                    icon={weather.weather[0].icon}
-                    isFahrenheit={isFahrenheit}
-                  />
-                ))}
+              {weather && (
+                <SimpleMap
+                  city={weather.name}
+                  country={weather.sys.country}
+                  lat={weather.coord.lat}
+                  lon={weather.coord.lon}
+                  temp={weather.main.temp}
+                  description={weather.weather[0].description}
+                  isFahrenheit={isFahrenheit}
+                />
+              )}
             </TabsContent>
           </Tabs>
         )}
