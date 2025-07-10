@@ -28,6 +28,7 @@ SkyCast is a modern weather application that provides real-time weather and loca
 - **Tailwind CSS** (with custom config for glassmorphism and weather colors)
 - **TypeScript**
 - **PWA Support**
+- **ReactBits.dev** (UI component library)
 
 ---
 
@@ -41,6 +42,7 @@ SkyCast is a modern weather application that provides real-time weather and loca
 
 2. **Install dependencies:**
    ```bash
+   npm install reactbits
    pnpm install
    # or
    npm install
@@ -96,5 +98,33 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 ## License
 
 [MIT](LICENSE)
+
+---
+
+## 🧩 ReactBits.dev Integration
+
+SkyCast uses ReactBits.dev for enhanced UI components. ReactBits is a library of pre-built React/TypeScript UI components optimized for modern app development.
+
+### Using ReactBits Components
+
+```tsx
+import { Button, Input } from 'reactbits';
+
+export default function MyComponent() {
+  return (
+    <div>
+      <Input placeholder="Enter something" />
+      <Button>Click Me</Button>
+    </div>
+  );
+}
+```
+
+### Tips for ReactBits Integration
+
+- **TypeScript Support:** ReactBits components are fully typed, providing excellent IntelliSense.
+- **Tailwind Compatibility:** ReactBits works seamlessly with your existing Tailwind configuration.
+- **Custom Styling:** Override default styles with Tailwind classes or extend themes as needed.
+- **v0 Compatibility:** Perfect for v0-generated Next.js projects.
 
 ---
