@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#4dabf7" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
       </head>
-      <body className="font-sans">{/* inter.className */}
+      <body className="font-sans">{/* Using fallback font due to network restrictions */}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <main className="min-h-screen bg-radial-gradient from-cyan-50 via-sky-50 to-sky-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 flex flex-col items-center justify-center p-4">
             {children}
