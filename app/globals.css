@@ -19,6 +19,11 @@
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
+    /* Typewriter animation speeds (in milliseconds) */
+    --typewriter-speed-location: 80;
+    --typewriter-speed-temperature: 100;
+    --typewriter-speed-forecast-title: 60;
+
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
@@ -63,6 +68,11 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 199 89% 48%;
+
+    /* Typewriter animation speeds (same as light theme) */
+    --typewriter-speed-location: 80;
+    --typewriter-speed-temperature: 100;
+    --typewriter-speed-forecast-title: 60;
   }
 }
 

@@ -17,6 +17,7 @@ import { PWARegister } from "@/components/pwa-register"
 import { CircularDecorations } from "@/components/circular-decorations"
 import { SimpleMap } from "@/components/simple-map"
 import { useToast } from "@/hooks/use-toast"
+import { Typewriter } from "@/components/typewriter"
 
 export default function WeatherApp() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -291,7 +292,11 @@ export default function WeatherApp() {
                     <div>
                       <CardTitle className="text-2xl flex items-center text-weather-blue dark:text-weather-lightBlue">
                         <MapPin className="h-5 w-5 mr-2" />
-                        {weather.name}, {weather.sys.country}
+                        <Typewriter 
+                          text={`${weather.name}, ${weather.sys.country}`}
+                          cssSpeedVariable="--typewriter-speed-location"
+                          startDelay={0}
+                        />
                       </CardTitle>
                       <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2">
                         <span>
@@ -308,7 +313,11 @@ export default function WeatherApp() {
                     </div>
                     <div className="text-right">
                       <div className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-weather-blue to-weather-teal dark:from-weather-lightBlue dark:to-weather-cyan">
-                        {getTemperature(weather.main.temp)}
+                        <Typewriter 
+                          text={getTemperature(weather.main.temp)}
+                          cssSpeedVariable="--typewriter-speed-temperature"
+                          startDelay={300}
+                        />
                       </div>
                       <div className="text-sm text-muted-foreground">
                         Feels like {getTemperature(weather.main.feels_like)}
@@ -354,7 +363,11 @@ export default function WeatherApp() {
 
                 <CardHeader>
                   <CardTitle className="text-weather-blue dark:text-weather-lightBlue">
-                    5-Day Forecast for {weather.name}
+                    <Typewriter 
+                      text={`5-Day Forecast for ${weather.name}`}
+                      cssSpeedVariable="--typewriter-speed-forecast-title"
+                      startDelay={0}
+                    />
                   </CardTitle>
                   <CardDescription className="flex items-center gap-2">
                     Weather forecast for the next 5 days
