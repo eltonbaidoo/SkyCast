@@ -43,9 +43,8 @@
     "clsx": "^2.1.1",
     "cmdk": "latest",
     "embla-carousel-react": "latest",
-    "google.maps": "latest",
+    "google-maps": "latest",
     "input-otp": "latest",
-    "jsonwebtoken": "9.0.2",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
     "next-themes": "latest",
@@ -63,7 +62,6 @@
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
     "@types/google.maps": "^3.58.1",
-    "@types/jsonwebtoken": "9.0.7",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",

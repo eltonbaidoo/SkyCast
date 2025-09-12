@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { Wrapper } from "@googlemaps/react-wrapper"
-import * as google from "google.maps"
+import type { google } from "google-maps"
 
 // Define the props interface
 interface WeatherMapProps {
@@ -24,10 +24,10 @@ function GoogleMapComponent({ lat, lon, city, country, temp, description, icon, 
   const [marker, setMarker] = useState<google.maps.Marker | null>(null)
 
   useEffect(() => {
-    if (!mapRef.current) return
+    if (!mapRef.current || !window.google) return
 
     // Initialize the map
-    const mapInstance = new google.maps.Map(mapRef.current, {
+    const mapInstance = new window.google.maps.Map(mapRef.current, {
       center: { lat, lng: lon },
       zoom: 10,
       styles: [
@@ -50,19 +50,19 @@ function GoogleMapComponent({ lat, lon, city, country, temp, description, icon, 
     setMap(mapInstance)
 
     // Create custom weather marker
-    const weatherMarker = new google.maps.Marker({
+    const weatherMarker = new window.google.maps.Marker({
       position: { lat, lng: lon },
       map: mapInstance,
       title: `${city}, ${country}`,
       icon: {
         url: `https://openweathermap.org/img/wn/${icon}@2x.png`,
-        scaledSize: new google.maps.Size(50, 50),
-        anchor: new google.maps.Point(25, 25),
+        scaledSize: new window.google.maps.Size(50, 50),
+        anchor: new window.google.maps.Point(25, 25),
       },
     })
 
     // Create info window
-    const infoWindow = new google.maps.InfoWindow({
+    const infoWindow = new window.google.maps.InfoWindow({
       content: `
         <div style="text-align: center; padding: 10px; font-family: system-ui;">
           <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px;">
@@ -130,7 +130,7 @@ export function WeatherMap(props: WeatherMapProps) {
   return (
     <Card className="overflow-hidden border-2 border-weather-blue/20 shadow-lg rounded-[2rem]">
       <div className="h-[400px] w-full relative">
-        <Wrapper apiKey={apiKey} libraries={["marker"]}>
+        <Wrapper apiKey={apiKey}>
           <GoogleMapComponent {...props} />
         </Wrapper>
       </div>
