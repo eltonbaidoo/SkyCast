@@ -153,3 +153,5 @@ export function decodeJWT(token: string): JWTPayload | null {
     return null
   }
 }
+
+export { verifyJWT as verifyToken }
