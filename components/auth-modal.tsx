@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SignInForm } from "./sign-in-form"
 import { SignUpForm } from "./sign-up-form"
+import { useAuth } from "@/lib/auth-context"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -13,6 +14,12 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [activeTab, setActiveTab] = useState("signin")
+  const { refreshUser } = useAuth()
+
+  const handleSuccess = async () => {
+    await refreshUser()
+    onClose()
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -43,11 +50,11 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </TabsList>
 
           <TabsContent value="signin" className="mt-6">
-            <SignInForm onSuccess={onClose} />
+            <SignInForm onSuccess={handleSuccess} />
           </TabsContent>
 
           <TabsContent value="signup" className="mt-6">
-            <SignUpForm onSuccess={onClose} />
+            <SignUpForm onSuccess={handleSuccess} />
           </TabsContent>
         </Tabs>
       </DialogContent>

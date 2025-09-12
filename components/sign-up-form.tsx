@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Mail, Lock, User, Github, Chrome } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { signUp } from "@/app/actions/auth"
 
 interface SignUpFormProps {
   onSuccess: () => void
@@ -68,15 +68,36 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      const formDataObj = new FormData()
+      formDataObj.append("name", formData.name)
+      formDataObj.append("email", formData.email)
+      formDataObj.append("password", formData.password)
+
+      const result = await signUp(formDataObj)
+
+      if (result.error) {
+        toast({
+          title: "Sign Up Failed",
+          description: result.error,
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Welcome to SkyCast!",
+          description: "Your account has been created successfully",
+        })
+        onSuccess()
+      }
+    } catch (error) {
       toast({
-        title: "Welcome to SkyCast!",
-        description: "Your account has been created successfully",
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
       })
-      onSuccess()
-    }, 2000)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleInputChange = (field: string, value: string) => {
