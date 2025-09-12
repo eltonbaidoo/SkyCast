@@ -1,9 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
+import { verifyJWT } from "@/lib/jwt"
 import { getUserById } from "@/lib/auth"
-
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production"
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +11,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "No token found" }, { status: 401 })
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; email: string }
+    const decoded = await verifyJWT(token)
+
+    if (!decoded) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    }
+
     const user = await getUserById(decoded.userId)
 
     if (!user) {

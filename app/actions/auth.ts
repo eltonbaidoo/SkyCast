@@ -2,7 +2,7 @@
 
 import { createUser, authenticateUser } from "@/lib/auth"
 import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
+import { signJWT } from "@/lib/jwt"
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production"
 
@@ -29,8 +29,7 @@ export async function signUp(formData: FormData) {
 
     const user = await createUser(name, email, password)
 
-    // Create JWT token
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: "7d" })
+    const token = await signJWT({ userId: user.id, email: user.email })
 
     // Set cookie
     cookies().set("auth-token", token, {
@@ -62,8 +61,7 @@ export async function signIn(formData: FormData) {
       return { error: "Invalid email or password" }
     }
 
-    // Create JWT token
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: "7d" })
+    const token = await signJWT({ userId: user.id, email: user.email })
 
     // Set cookie
     cookies().set("auth-token", token, {
