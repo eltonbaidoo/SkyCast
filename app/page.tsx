@@ -163,18 +163,7 @@ export default function WeatherApp() {
   }
 
   useEffect(() => {
-    // Check if we should use the fallback map
-    const checkLeaflet = async () => {
-      try {
-        await import("leaflet")
-        setUseMapFallback(false)
-      } catch (error) {
-        console.error("Leaflet import failed, using fallback map", error)
-        setUseMapFallback(true)
-      }
-    }
-
-    checkLeaflet()
+    setUseMapFallback(false)
   }, [])
 
   const handleSearch = (city) => {

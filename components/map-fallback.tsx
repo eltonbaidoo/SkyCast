@@ -10,6 +10,19 @@ interface MapFallbackProps {
 }
 
 export function MapFallback({ lat, lon, city, country }: MapFallbackProps) {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
+  if (!apiKey) {
+    return (
+      <Card className="h-[400px] flex items-center justify-center rounded-[2rem] overflow-hidden border-2 border-red-200">
+        <div className="text-center text-red-600">
+          <p className="font-semibold">Google Maps API Key Required</p>
+          <p className="text-sm">Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables</p>
+        </div>
+      </Card>
+    )
+  }
+
   return (
     <Card className="overflow-hidden border-2 border-weather-blue/20 shadow-lg rounded-[2rem]">
       <div className="h-[400px] w-full relative">
@@ -20,7 +33,7 @@ export function MapFallback({ lat, lon, city, country }: MapFallbackProps) {
           scrolling="no"
           marginHeight={0}
           marginWidth={0}
-          src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${lat},${lon}&zoom=10`}
+          src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${lat},${lon}&zoom=10&maptype=roadmap`}
           style={{ border: 0, borderRadius: "1.5rem" }}
           title={`Map of ${city}, ${country}`}
         ></iframe>
@@ -31,7 +44,7 @@ export function MapFallback({ lat, lon, city, country }: MapFallbackProps) {
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            View in Google Maps
+            View on Google Maps
           </a>
         </div>
       </div>

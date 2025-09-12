@@ -1,5 +1,14 @@
 const CACHE_NAME = "skycast-cache-v2"
-const urlsToCache = ["/", "/icons/icon-192x192.png", "/icons/icon-512x512.png"]
+const urlsToCache = [
+  "/",
+  "/icons/icon-192x192.png",
+  "/icons/icon-512x512.png",
+  "https://maps.googleapis.com/maps/api/js",
+  "https://openweathermap.org/img/wn/01d@2x.png",
+  "https://openweathermap.org/img/wn/01n@2x.png",
+  "https://openweathermap.org/img/wn/02d@2x.png",
+  "https://openweathermap.org/img/wn/02n@2x.png",
+]
 
 // Install the service worker and cache assets
 self.addEventListener("install", (event) => {
@@ -47,8 +56,11 @@ self.addEventListener("fetch", (event) => {
 
           // Cache the fetched response
           caches.open(CACHE_NAME).then((cache) => {
-            // Don't cache API requests
-            if (!event.request.url.includes("/api/")) {
+            if (
+              !event.request.url.includes("/api/") &&
+              !event.request.url.includes("maps.googleapis.com") &&
+              !event.request.url.includes("maps.gstatic.com")
+            ) {
               cache.put(event.request, responseToCache)
             }
           })

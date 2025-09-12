@@ -17,6 +17,85 @@ interface WeatherMapProps {
   isFahrenheit: boolean
 }
 
+// Google Maps component
+function GoogleMapComponent({ lat, lon, city, country, temp, description, icon, isFahrenheit }: WeatherMapProps) {
+  const mapRef = useRef<HTMLDivElement>(null)
+  const [map, setMap] = useState<google.maps.Map | null>(null)
+  const [marker, setMarker] = useState<google.maps.Marker | null>(null)
+
+  useEffect(() => {
+    if (!mapRef.current) return
+
+    // Initialize the map
+    const mapInstance = new google.maps.Map(mapRef.current, {
+      center: { lat, lng: lon },
+      zoom: 10,
+      styles: [
+        {
+          featureType: "all",
+          elementType: "geometry.fill",
+          stylers: [{ color: "#f8fafc" }],
+        },
+        {
+          featureType: "water",
+          elementType: "geometry.fill",
+          stylers: [{ color: "#4dd3f7" }],
+        },
+      ],
+      mapTypeControl: true,
+      streetViewControl: false,
+      fullscreenControl: true,
+    })
+
+    setMap(mapInstance)
+
+    // Create custom weather marker
+    const weatherMarker = new google.maps.Marker({
+      position: { lat, lng: lon },
+      map: mapInstance,
+      title: `${city}, ${country}`,
+      icon: {
+        url: `https://openweathermap.org/img/wn/${icon}@2x.png`,
+        scaledSize: new google.maps.Size(50, 50),
+        anchor: new google.maps.Point(25, 25),
+      },
+    })
+
+    // Create info window
+    const infoWindow = new google.maps.InfoWindow({
+      content: `
+        <div style="text-align: center; padding: 10px; font-family: system-ui;">
+          <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px;">
+            ${city}, ${country}
+          </div>
+          <div style="font-size: 18px; font-weight: bold; color: #0ea5e9; margin-bottom: 5px;">
+            ${isFahrenheit ? `${Math.round((temp * 9) / 5 + 32)}°F` : `${Math.round(temp)}°C`}
+          </div>
+          <div style="text-transform: capitalize; color: #64748b;">
+            ${description}
+          </div>
+        </div>
+      `,
+    })
+
+    // Add click listener to marker
+    weatherMarker.addListener("click", () => {
+      infoWindow.open(mapInstance, weatherMarker)
+    })
+
+    setMarker(weatherMarker)
+
+    // Cleanup function
+    return () => {
+      if (weatherMarker) {
+        weatherMarker.setMap(null)
+      }
+    }
+  }, [lat, lon, city, country, temp, description, icon, isFahrenheit])
+
+  return <div ref={mapRef} style={{ width: "100%", height: "400px", borderRadius: "1.5rem" }} />
+}
+
 export function WeatherMap(props: WeatherMapProps) {
   const [isClient, setIsClient] = useState(false)
 
@@ -39,12 +118,10 @@ export function WeatherMap(props: WeatherMapProps) {
 
   if (!apiKey) {
     return (
-      <Card className="h-[400px] flex items-center justify-center rounded-[2rem] overflow-hidden">
-        <div className="text-center">
-          <p className="text-red-500">Google Maps API key not configured</p>
-          <p className="text-sm text-muted-foreground">
-            Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables
-          </p>
+      <Card className="h-[400px] flex items-center justify-center rounded-[2rem] overflow-hidden border-2 border-red-200">
+        <div className="text-center text-red-600">
+          <p className="font-semibold">Google Maps API Key Required</p>
+          <p className="text-sm">Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables</p>
         </div>
       </Card>
     )
@@ -58,104 +135,6 @@ export function WeatherMap(props: WeatherMapProps) {
         </Wrapper>
       </div>
     </Card>
-  )
-}
-
-function GoogleMapComponent({ city, country, lat, lon, temp, description, icon, isFahrenheit }: WeatherMapProps) {
-  const mapRef = useRef<HTMLDivElement>(null)
-  const [map, setMap] = useState<google.maps.Map | null>(null)
-  const [marker, setMarker] = useState<google.maps.marker.AdvancedMarkerElement | null>(null)
-
-  useEffect(() => {
-    if (!mapRef.current || !window.google) return
-
-    // Initialize the map
-    const mapInstance = new google.maps.Map(mapRef.current, {
-      center: { lat, lng: lon },
-      zoom: 10,
-      mapId: "weather-map", // Required for Advanced Markers
-      styles: [
-        {
-          featureType: "all",
-          elementType: "geometry.fill",
-          stylers: [{ color: "#f5f5f5" }],
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [{ color: "#4dd3f7" }],
-        },
-      ],
-    })
-
-    setMap(mapInstance)
-
-    // Create custom weather marker
-    const weatherMarkerElement = document.createElement("div")
-    weatherMarkerElement.innerHTML = `
-      <div style="
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 50%;
-        padding: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        border: 2px solid #4dd3f7;
-      ">
-        <img 
-          src="https://openweathermap.org/img/wn/${icon}@2x.png" 
-          alt="${description}"
-          style="width: 40px; height: 40px; display: block;"
-        />
-      </div>
-    `
-
-    // Create Advanced Marker
-    const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
-      map: mapInstance,
-      position: { lat, lng: lon },
-      content: weatherMarkerElement,
-      title: `${city}, ${country}`,
-    })
-
-    // Create info window
-    const infoWindow = new google.maps.InfoWindow({
-      content: `
-        <div style="text-align: center; padding: 10px;">
-          <div style="font-weight: bold; margin-bottom: 5px;">
-            ${city}, ${country}
-          </div>
-          <div style="font-size: 18px; margin-bottom: 5px;">
-            ${isFahrenheit ? `${Math.round((temp * 9) / 5 + 32)}°F` : `${Math.round(temp)}°C`}
-          </div>
-          <div style="text-transform: capitalize;">
-            ${description}
-          </div>
-        </div>
-      `,
-    })
-
-    // Add click listener to marker
-    advancedMarker.addListener("click", () => {
-      infoWindow.open(mapInstance, advancedMarker)
-    })
-
-    setMarker(advancedMarker)
-
-    return () => {
-      if (marker) {
-        marker.map = null
-      }
-    }
-  }, [lat, lon, city, country, temp, description, icon, isFahrenheit])
-
-  return (
-    <div
-      ref={mapRef}
-      style={{
-        height: "100%",
-        width: "100%",
-        borderRadius: "1.5rem",
-      }}
-    />
   )
 }
 
