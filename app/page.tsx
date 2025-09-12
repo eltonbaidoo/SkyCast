@@ -350,7 +350,7 @@ export default function WeatherApp() {
                       <div className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-weather-blue to-weather-teal dark:from-weather-lightBlue dark:to-weather-cyan">
                         {getTemperature(weather.main.temp)}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-foreground/70">
                         Feels like {getTemperature(weather.main.feels_like)}
                       </div>
                     </div>

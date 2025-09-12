@@ -1,13 +1,13 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Mail, Lock, Github, Chrome } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { signIn } from "@/app/actions/auth"
 
 interface SignInFormProps {
   onSuccess: () => void
@@ -47,15 +47,35 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
 
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      const formData = new FormData()
+      formData.append("email", email)
+      formData.append("password", password)
+
+      const result = await signIn(formData)
+
+      if (result.error) {
+        toast({
+          title: "Sign In Failed",
+          description: result.error,
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Welcome back!",
+          description: "Successfully signed in to SkyCast",
+        })
+        onSuccess()
+      }
+    } catch (error) {
       toast({
-        title: "Welcome back!",
-        description: "Successfully signed in to SkyCast",
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
       })
-      onSuccess()
-    }, 1500)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleSocialLogin = (provider: string) => {
