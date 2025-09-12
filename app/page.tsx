@@ -218,6 +218,53 @@ export default function WeatherApp() {
     return "bg-muted/50"
   }
 
+  const handleLocationSelect = async (lat: number, lon: number, address?: string) => {
+    setLoading(true)
+    setError("")
+
+    try {
+      // Use coordinates to fetch weather data
+      const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}&type=weather`)
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to fetch weather data")
+      }
+
+      const data = await response.json()
+      setWeather(data)
+
+      // Update search query with the location name
+      if (address) {
+        setSearchQuery(address)
+        localStorage.setItem("lastSearchedCity", address)
+      }
+
+      // Fetch forecast data
+      const forecastResponse = await fetch(`/api/weather?lat=${lat}&lon=${lon}&type=forecast`)
+
+      if (forecastResponse.ok) {
+        const forecastData = await forecastResponse.json()
+        const dailyForecasts = forecastData.list.filter((item, index) => index % 8 === 0).slice(0, 5)
+        setForecast(dailyForecasts)
+      }
+
+      toast({
+        title: "Location Updated",
+        description: `Weather data loaded for ${address || "selected location"}`,
+      })
+    } catch (err) {
+      setError(err.message)
+      toast({
+        title: "Error",
+        description: err.message,
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <>
       {weather && <WeatherBackground condition={weather.weather[0].main} />}
@@ -443,6 +490,7 @@ export default function WeatherApp() {
                     description={weather.weather[0].description}
                     icon={weather.weather[0].icon}
                     isFahrenheit={isFahrenheit}
+                    onLocationSelect={handleLocationSelect}
                   />
                 ))}
             </TabsContent>
