@@ -80,10 +80,10 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="neon-input pl-10 bg-black/30 border-amber-500/30 text-white placeholder:text-gray-400 focus:border-amber-500"
+              className="neon-input pl-10 bg-black/20 border-amber-500/20 text-white placeholder:text-gray-400 focus:border-amber-500/60"
             />
           </div>
-          {errors.email && <p className="text-sm text-red-400 neon-pulse">{errors.email}</p>}
+          {errors.email && <p className="text-sm text-red-400">{errors.email}</p>}
         </div>
 
         <div className="space-y-2">
@@ -98,7 +98,7 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="neon-input pl-10 pr-10 bg-black/30 border-amber-500/30 text-white placeholder:text-gray-400 focus:border-amber-500"
+              className="neon-input pl-10 pr-10 bg-black/20 border-amber-500/20 text-white placeholder:text-gray-400 focus:border-amber-500/60"
             />
             <Button
               type="button"
@@ -114,10 +114,10 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
               )}
             </Button>
           </div>
-          {errors.password && <p className="text-sm text-red-400 neon-pulse">{errors.password}</p>}
+          {errors.password && <p className="text-sm text-red-400">{errors.password}</p>}
         </div>
 
-        <Button type="submit" disabled={isLoading} className="w-full neon-button py-3 font-semibold text-lg neon-glow">
+        <Button type="submit" disabled={isLoading} className="w-full neon-button py-3 font-semibold text-lg">
           {isLoading ? (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
@@ -131,10 +131,10 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-amber-500/30" />
+          <span className="w-full border-t border-amber-500/20" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-black/50 px-2 text-amber-400">Or continue with</span>
+          <span className="bg-black/50 px-2 text-amber-400/80">Or continue with</span>
         </div>
       </div>
 
@@ -143,7 +143,7 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
           type="button"
           variant="outline"
           onClick={() => handleSocialLogin("Google")}
-          className="neon-button bg-black/20 border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10"
+          className="neon-button bg-black/10 border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/5"
         >
           <Chrome className="mr-2 h-4 w-4" />
           Google
@@ -152,7 +152,7 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
           type="button"
           variant="outline"
           onClick={() => handleSocialLogin("GitHub")}
-          className="neon-button bg-black/20 border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10"
+          className="neon-button bg-black/10 border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/5"
         >
           <Github className="mr-2 h-4 w-4" />
           GitHub
@@ -160,7 +160,7 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
       </div>
 
       <div className="text-center">
-        <Button variant="link" className="text-amber-400 hover:text-amber-300 text-sm neon-pulse">
+        <Button variant="link" className="text-amber-400/80 hover:text-amber-300 text-sm">
           Forgot your access code?
         </Button>
       </div>

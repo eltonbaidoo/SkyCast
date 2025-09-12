@@ -17,26 +17,26 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md glass-panel border-0 neon-border">
-        <div className="absolute -top-4 -left-4 w-8 h-8 bg-amber-500 rounded-full blur-sm neon-pulse opacity-60"></div>
-        <div className="absolute -top-2 -right-6 w-6 h-6 bg-indigo-500 rounded-full blur-sm neon-pulse opacity-40"></div>
-        <div className="absolute -bottom-4 -right-4 w-10 h-10 bg-cyan-400 rounded-full blur-md neon-pulse opacity-30"></div>
+        <div className="absolute -top-3 -left-3 w-6 h-6 bg-amber-500/40 rounded-full blur-sm neon-pulse"></div>
+        <div className="absolute -top-2 -right-4 w-4 h-4 bg-indigo-500/30 rounded-full blur-sm neon-pulse"></div>
+        <div className="absolute -bottom-3 -right-3 w-7 h-7 bg-cyan-400/25 rounded-full blur-md neon-pulse"></div>
 
         <DialogHeader className="text-center">
-          <DialogTitle className="text-2xl font-bold neon-text neon-flicker">SkyCast Access</DialogTitle>
+          <DialogTitle className="text-2xl font-bold neon-text">SkyCast Access</DialogTitle>
           <p className="text-muted-foreground">Enter the digital realm of weather intelligence</p>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-black/20 border neon-border">
+          <TabsList className="grid w-full grid-cols-2 bg-black/10 border neon-border">
             <TabsTrigger
               value="signin"
-              className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 data-[state=active]:neon-glow"
+              className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400"
             >
               Sign In
             </TabsTrigger>
             <TabsTrigger
               value="signup"
-              className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 data-[state=active]:neon-glow"
+              className="data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400"
             >
               Sign Up
             </TabsTrigger>

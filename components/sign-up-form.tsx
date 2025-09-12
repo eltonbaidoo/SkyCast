@@ -108,10 +108,10 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
               placeholder="Enter your full name"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              className="neon-input pl-10 bg-black/30 border-amber-500/30 text-white placeholder:text-gray-400 focus:border-amber-500"
+              className="neon-input pl-10 bg-black/20 border-amber-500/20 text-white placeholder:text-gray-400 focus:border-amber-500/60"
             />
           </div>
-          {errors.name && <p className="text-sm text-red-400 neon-pulse">{errors.name}</p>}
+          {errors.name && <p className="text-sm text-red-400">{errors.name}</p>}
         </div>
 
         <div className="space-y-2">
@@ -126,10 +126,10 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
               placeholder="Enter your email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              className="neon-input pl-10 bg-black/30 border-amber-500/30 text-white placeholder:text-gray-400 focus:border-amber-500"
+              className="neon-input pl-10 bg-black/20 border-amber-500/20 text-white placeholder:text-gray-400 focus:border-amber-500/60"
             />
           </div>
-          {errors.email && <p className="text-sm text-red-400 neon-pulse">{errors.email}</p>}
+          {errors.email && <p className="text-sm text-red-400">{errors.email}</p>}
         </div>
 
         <div className="space-y-2">
@@ -144,7 +144,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
               placeholder="Create a strong password"
               value={formData.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
-              className="neon-input pl-10 pr-10 bg-black/30 border-amber-500/30 text-white placeholder:text-gray-400 focus:border-amber-500"
+              className="neon-input pl-10 pr-10 bg-black/20 border-amber-500/20 text-white placeholder:text-gray-400 focus:border-amber-500/60"
             />
             <Button
               type="button"
@@ -160,7 +160,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
               )}
             </Button>
           </div>
-          {errors.password && <p className="text-sm text-red-400 neon-pulse">{errors.password}</p>}
+          {errors.password && <p className="text-sm text-red-400">{errors.password}</p>}
         </div>
 
         <div className="space-y-2">
@@ -175,7 +175,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
               placeholder="Confirm your password"
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-              className="neon-input pl-10 pr-10 bg-black/30 border-amber-500/30 text-white placeholder:text-gray-400 focus:border-amber-500"
+              className="neon-input pl-10 pr-10 bg-black/20 border-amber-500/20 text-white placeholder:text-gray-400 focus:border-amber-500/60"
             />
             <Button
               type="button"
@@ -191,7 +191,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
               )}
             </Button>
           </div>
-          {errors.confirmPassword && <p className="text-sm text-red-400 neon-pulse">{errors.confirmPassword}</p>}
+          {errors.confirmPassword && <p className="text-sm text-red-400">{errors.confirmPassword}</p>}
         </div>
 
         <div className="flex items-center space-x-2">
@@ -199,21 +199,21 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
             id="terms"
             checked={acceptTerms}
             onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
-            className="border-amber-500/50 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+            className="border-amber-500/40 data-[state=checked]:bg-amber-500/80 data-[state=checked]:border-amber-500/80"
           />
           <Label
             htmlFor="terms"
             className="text-sm text-gray-300 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             I accept the{" "}
-            <Button variant="link" className="p-0 h-auto text-amber-400 hover:text-amber-300">
+            <Button variant="link" className="p-0 h-auto text-amber-400/80 hover:text-amber-300">
               Terms & Conditions
             </Button>
           </Label>
         </div>
-        {errors.terms && <p className="text-sm text-red-400 neon-pulse">{errors.terms}</p>}
+        {errors.terms && <p className="text-sm text-red-400">{errors.terms}</p>}
 
-        <Button type="submit" disabled={isLoading} className="w-full neon-button py-3 font-semibold text-lg neon-glow">
+        <Button type="submit" disabled={isLoading} className="w-full neon-button py-3 font-semibold text-lg">
           {isLoading ? (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
@@ -227,10 +227,10 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-amber-500/30" />
+          <span className="w-full border-t border-amber-500/20" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-black/50 px-2 text-amber-400">Or sign up with</span>
+          <span className="bg-black/50 px-2 text-amber-400/80">Or sign up with</span>
         </div>
       </div>
 
@@ -239,7 +239,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           type="button"
           variant="outline"
           onClick={() => handleSocialSignUp("Google")}
-          className="neon-button bg-black/20 border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10"
+          className="neon-button bg-black/10 border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/5"
         >
           <Chrome className="mr-2 h-4 w-4" />
           Google
@@ -248,7 +248,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           type="button"
           variant="outline"
           onClick={() => handleSocialSignUp("GitHub")}
-          className="neon-button bg-black/20 border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10"
+          className="neon-button bg-black/10 border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/5"
         >
           <Github className="mr-2 h-4 w-4" />
           GitHub
