@@ -154,13 +154,13 @@ export function WeatherMap({
           </Button>
         </div>
 
-        <div className="absolute bottom-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-weather-blue/20">
-          <div className="flex items-center gap-3 mb-2">
-            <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} alt={description} className="w-12 h-12" />
+        <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-weather-blue/20 max-w-[200px]">
+          <div className="flex items-center gap-2 mb-2">
+            <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} alt={description} className="w-10 h-10" />
             <div>
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <MapPin className="h-4 w-4 text-blue-500" />
-                <span>
+              <div className="flex items-center gap-1 text-xs font-medium">
+                <MapPin className="h-3 w-3 text-blue-500" />
+                <span className="truncate">
                   {city}, {country}
                 </span>
               </div>
@@ -169,9 +169,9 @@ export function WeatherMap({
               </div>
             </div>
           </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400 capitalize">{description}</div>
-          <div className="text-xs text-gray-500 mt-1">
-            {lat.toFixed(4)}, {lon.toFixed(4)}
+          <div className="text-xs text-gray-600 dark:text-gray-400 capitalize mb-1">{description}</div>
+          <div className="text-xs text-gray-500">
+            {lat.toFixed(2)}, {lon.toFixed(2)}
           </div>
         </div>
 
