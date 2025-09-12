@@ -15,6 +15,7 @@ import { Favorites } from "@/components/favorites"
 import { GeolocationButton } from "@/components/geolocation-button"
 import { PWARegister } from "@/components/pwa-register"
 import { CircularDecorations } from "@/components/circular-decorations"
+import { AuthButton } from "@/components/auth-button"
 import { useToast } from "@/hooks/use-toast"
 import dynamic from "next/dynamic"
 
@@ -236,7 +237,10 @@ export default function WeatherApp() {
       <div className="glass-panel container mx-auto px-8 py-8 max-w-4xl">
         <div className="flex justify-between items-center mb-4 px-2">
           <PWARegister />
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <AuthButton />
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="text-center mb-8">

@@ -33,6 +33,12 @@
     --ring: 199 89% 48%;
 
     --radius: 1rem; /* Increased from 0.5rem to 1rem for more circular borders */
+
+    /* Added neon-themed color tokens */
+    --neon-primary: 28 96% 53%; /* Amber-600 #d97706 */
+    --neon-secondary: 238 84% 67%; /* Indigo #6366f1 */
+    --neon-accent: 192 100% 50%; /* Cyan for additional glow */
+    --neon-glow: 28 96% 53%; /* Same as primary for glow effects */
   }
 
   .dark {
@@ -107,6 +113,96 @@
 
 .animate-pulse-subtle {
   animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Added neon glow animations and effects */
+@keyframes neon-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px hsl(var(--neon-primary)), 0 0 10px hsl(var(--neon-primary)), 0 0 15px hsl(var(--neon-primary));
+  }
+  50% {
+    box-shadow: 0 0 10px hsl(var(--neon-primary)), 0 0 20px hsl(var(--neon-primary)), 0 0 30px hsl(var(--neon-primary));
+  }
+}
+
+@keyframes neon-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes neon-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  2%,
+  8%,
+  10%,
+  12%,
+  14%,
+  16%,
+  18%,
+  20% {
+    opacity: 0.9;
+  }
+  4%,
+  6% {
+    opacity: 0.8;
+  }
+}
+
+.neon-glow {
+  animation: neon-glow 2s ease-in-out infinite alternate;
+}
+
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+.neon-flicker {
+  animation: neon-flicker 3s linear infinite;
+}
+
+.neon-border {
+  border: 2px solid hsl(var(--neon-primary));
+  box-shadow: 0 0 10px hsl(var(--neon-primary) / 0.5), inset 0 0 10px hsl(var(--neon-primary) / 0.1);
+}
+
+.neon-text {
+  color: hsl(var(--neon-primary));
+  text-shadow: 0 0 5px hsl(var(--neon-primary)), 0 0 10px hsl(var(--neon-primary));
+}
+
+.neon-button {
+  background: transparent;
+  border: 2px solid hsl(var(--neon-primary));
+  color: hsl(var(--neon-primary));
+  box-shadow: 0 0 10px hsl(var(--neon-primary) / 0.3);
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+  background: hsl(var(--neon-primary) / 0.1);
+  box-shadow: 0 0 20px hsl(var(--neon-primary) / 0.6), 0 0 30px hsl(var(--neon-primary) / 0.4);
+  transform: translateY(-2px);
+}
+
+.neon-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid hsl(var(--neon-primary) / 0.3);
+  transition: all 0.3s ease;
+}
+
+.neon-input:focus {
+  border-color: hsl(var(--neon-primary));
+  box-shadow: 0 0 15px hsl(var(--neon-primary) / 0.4);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* Custom rounded styles */
