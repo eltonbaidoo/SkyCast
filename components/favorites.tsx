@@ -13,31 +13,21 @@ interface FavoritesProps {
   onSelectCity: (city: string) => void
 }
 
-const FAVORITES_VERSION = "1.0"; // Increment this when favorites structure changes
-
 export function Favorites({ currentCity, onSelectCity }: FavoritesProps) {
   const [favorites, setFavorites] = useState<string[]>([])
   const [isOpen, setIsOpen] = useState(false)
 
   // Load favorites from localStorage on component mount
   useEffect(() => {
-    const storedVersion = localStorage.getItem("favoritesVersion");
-    if (storedVersion !== FAVORITES_VERSION) {
-      localStorage.removeItem("favorites");
-      localStorage.setItem("favoritesVersion", FAVORITES_VERSION);
-      setFavorites([]);
-      return;
-    }
-    const storedFavorites = localStorage.getItem("favorites");
+    const storedFavorites = localStorage.getItem("favorites")
     if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
+      setFavorites(JSON.parse(storedFavorites))
     }
   }, [])
 
   // Save favorites to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-    localStorage.setItem("favoritesVersion", FAVORITES_VERSION);
+    localStorage.setItem("favorites", JSON.stringify(favorites))
   }, [favorites])
 
   const addToFavorites = () => {
