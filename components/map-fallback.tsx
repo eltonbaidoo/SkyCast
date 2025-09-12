@@ -20,18 +20,18 @@ export function MapFallback({ lat, lon, city, country }: MapFallbackProps) {
           scrolling="no"
           marginHeight={0}
           marginWidth={0}
-          src={`https://www.openstreetmap.org/export/embed.html?bbox=${lon - 0.1}%2C${lat - 0.1}%2C${lon + 0.1}%2C${lat + 0.1}&amp;layer=mapnik&amp;marker=${lat}%2C${lon}`}
+          src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${lat},${lon}&zoom=10`}
           style={{ border: 0, borderRadius: "1.5rem" }}
           title={`Map of ${city}, ${country}`}
         ></iframe>
         <div className="absolute bottom-0 right-0 bg-white p-2 text-xs rounded-tl-2xl">
           <a
-            href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=12/${lat}/${lon}`}
+            href={`https://www.google.com/maps/search/?api=1&query=${lat},${lon}`}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            View Larger Map
+            View in Google Maps
           </a>
         </div>
       </div>

@@ -1,13 +1,5 @@
-const CACHE_NAME = "skycast-cache-v1"
-const urlsToCache = [
-  "/",
-  "/icons/icon-192x192.png",
-  "/icons/icon-512x512.png",
-  "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
-  "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-]
+const CACHE_NAME = "skycast-cache-v2"
+const urlsToCache = ["/", "/icons/icon-192x192.png", "/icons/icon-512x512.png"]
 
 // Install the service worker and cache assets
 self.addEventListener("install", (event) => {
