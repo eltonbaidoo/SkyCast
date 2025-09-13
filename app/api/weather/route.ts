@@ -40,7 +40,7 @@ interface ForecastData {
 // Google Weather API integration (using Google's geocoding + weather data)
 async function fetchGoogleWeather(city: string, lat?: string, lon?: string): Promise<WeatherData | null> {
   try {
-    const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    const googleApiKey = process.env.GOOGLE_MAPS_API_KEY
     if (!googleApiKey) return null
 
     // If we don't have coordinates, geocode the city first

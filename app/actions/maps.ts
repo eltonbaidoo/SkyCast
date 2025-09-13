@@ -6,7 +6,7 @@ interface MapEmbedData {
 }
 
 export async function getMapEmbedUrl(lat: number, lon: number, city: string, country: string): Promise<MapEmbedData> {
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+  const apiKey = process.env.GOOGLE_MAPS_API_KEY
 
   if (!apiKey) {
     throw new Error("Google Maps API key not configured")
@@ -31,7 +31,7 @@ export async function getMapEmbedUrl(lat: number, lon: number, city: string, cou
 }
 
 export async function reverseGeocode(lat: number, lon: number): Promise<string> {
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+  const apiKey = process.env.GOOGLE_MAPS_API_KEY
 
   if (!apiKey) {
     return `${lat.toFixed(4)}, ${lon.toFixed(4)}`
