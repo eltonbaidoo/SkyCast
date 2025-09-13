@@ -381,7 +381,10 @@ export default function WeatherApp() {
                     <div>
                       <CardTitle className="text-lg md:text-2xl flex items-center text-weather-blue dark:text-weather-lightBlue">
                         <MapPin className="h-4 w-4 md:h-5 md:w-5 mr-2" />
-                        {weather.name}, {weather.sys.country}
+                        <span className="hidden sm:inline">
+                          {weather.name}, {weather.sys.country}
+                        </span>
+                        <span className="sm:hidden">{weather.name}</span>
                       </CardTitle>
                       <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs md:text-sm">
                         <span>

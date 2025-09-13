@@ -79,7 +79,7 @@ export function Favorites({ currentCity, onSelectCity }: FavoritesProps) {
       </div>
 
       {isOpen && favorites.length > 0 && (
-        <Card className="absolute right-0 mt-2 p-2 z-10 w-64 shadow-lg rounded-2xl glass-card">
+        <Card className="absolute right-0 mt-2 p-2 z-10 w-64 sm:w-72 shadow-lg rounded-2xl glass-card">
           <ScrollArea className="max-h-60">
             <div className="space-y-1">
               {favorites.map((favorite) => (
@@ -89,18 +89,18 @@ export function Favorites({ currentCity, onSelectCity }: FavoritesProps) {
                     onSelectCity(favorite.city_name)
                     setIsOpen(false)
                   }}
-                  className={`flex items-center justify-between p-2 rounded-xl cursor-pointer transition-all duration-150 ease-out hover:shadow-lg ${
+                  className={`flex items-center justify-between p-2 sm:p-3 rounded-xl cursor-pointer transition-all duration-150 ease-out hover:shadow-lg ${
                     favorite.city_name === currentCity
                       ? "bg-primary text-primary-foreground"
                       : "hover:bg-muted/80 bg-white/20 dark:bg-gray-800/30 backdrop-blur-sm"
                   }`}
                 >
-                  <span className="truncate">{favorite.city_name}</span>
+                  <span className="truncate text-sm sm:text-base">{favorite.city_name}</span>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={(e) => removeFromFavorites(favorite.city_name, e)}
-                    className="h-6 w-6 ml-2 hover:bg-red-100 hover:text-red-500 rounded-full"
+                    className="h-6 w-6 ml-2 hover:bg-red-100 hover:text-red-500 rounded-full flex-shrink-0"
                   >
                     <X className="h-3 w-3" />
                   </Button>
