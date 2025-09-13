@@ -17,6 +17,8 @@ import { PWARegister } from "@/components/pwa-register"
 import { CircularDecorations } from "@/components/circular-decorations"
 import { AuthButton } from "@/components/auth-button"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/lib/auth-context"
+import { useUserPreferences } from "@/lib/user-preferences-context"
 import dynamic from "next/dynamic"
 
 // Dynamically import the WeatherMap component with no SSR
@@ -43,15 +45,18 @@ export default function WeatherApp() {
   const [forecast, setForecast] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const [isFahrenheit, setIsFahrenheit] = useState(false)
-  const [isMph, setIsMph] = useState(false)
   const [useMapFallback, setUseMapFallback] = useState(false)
   const [activeTab, setActiveTab] = useState("current")
   const { toast } = useToast()
+  const { user } = useAuth()
+  const { preferences, updatePreferences } = useUserPreferences()
 
-  // Initialize with saved preferences
+  const isFahrenheit = preferences?.temperature_unit === "fahrenheit"
+  const isMph = false // Keep wind speed in km/h for now, can be added to preferences later
+
+  // Initialize with saved preferences or defaults
   useEffect(() => {
-    // Load last searched city
+    // Load last searched city from localStorage (keep this for non-authenticated users)
     const lastCity = localStorage.getItem("lastSearchedCity")
     if (lastCity) {
       setSearchQuery(lastCity)
@@ -60,27 +65,11 @@ export default function WeatherApp() {
       setSearchQuery("London")
     }
 
-    // Load active tab preference
+    // Load active tab preference from localStorage
     const savedTab = localStorage.getItem("activeTab")
     if (savedTab) {
       setActiveTab(savedTab)
     }
-
-    // Load user preferences from localStorage
-    const loadPreferences = () => {
-      const storedFahrenheit = localStorage.getItem("isFahrenheit")
-      const storedMph = localStorage.getItem("isMph")
-
-      if (storedFahrenheit !== null) {
-        setIsFahrenheit(storedFahrenheit === "true")
-      }
-
-      if (storedMph !== null) {
-        setIsMph(storedMph === "true")
-      }
-    }
-
-    loadPreferences()
   }, [])
 
   // Fetch weather when searchQuery changes
@@ -105,16 +94,6 @@ export default function WeatherApp() {
   useEffect(() => {
     localStorage.setItem("activeTab", activeTab)
   }, [activeTab])
-
-  // Save temperature unit preference
-  useEffect(() => {
-    localStorage.setItem("isFahrenheit", isFahrenheit.toString())
-  }, [isFahrenheit])
-
-  // Save wind speed unit preference
-  useEffect(() => {
-    localStorage.setItem("isMph", isMph.toString())
-  }, [isMph])
 
   const fetchWeather = async (query) => {
     if (!query) return
@@ -172,6 +151,18 @@ export default function WeatherApp() {
 
   const handleTabChange = (value) => {
     setActiveTab(value)
+  }
+
+  const handleTemperatureToggle = async (checked: boolean) => {
+    if (user && preferences) {
+      await updatePreferences({
+        temperature_unit: checked ? "fahrenheit" : "celsius",
+      })
+    }
+    // For non-authenticated users, still use localStorage as fallback
+    if (!user) {
+      localStorage.setItem("isFahrenheit", checked.toString())
+    }
   }
 
   const getWeatherIcon = (iconCode) => {
@@ -300,7 +291,7 @@ export default function WeatherApp() {
                 <div className="flex flex-wrap items-center gap-4">
                   <div className="flex items-center space-x-2">
                     <ThermometerSnowflake className="h-4 w-4 text-weather-blue" />
-                    <Switch id="temperature-unit" checked={isFahrenheit} onCheckedChange={setIsFahrenheit} />
+                    <Switch id="temperature-unit" checked={isFahrenheit} onCheckedChange={handleTemperatureToggle} />
                     <Thermometer className="h-4 w-4 text-weather-red" />
                     <Label htmlFor="temperature-unit" className="text-sm font-medium">
                       {isFahrenheit ? "°F" : "°C"}
@@ -311,7 +302,7 @@ export default function WeatherApp() {
                     <Label htmlFor="wind-unit" className="text-sm font-medium">
                       km/h
                     </Label>
-                    <Switch id="wind-unit" checked={isMph} onCheckedChange={setIsMph} />
+                    <Switch id="wind-unit" checked={isMph} onCheckedChange={() => {}} disabled />
                     <Label htmlFor="wind-unit" className="text-sm font-medium">
                       mph
                     </Label>

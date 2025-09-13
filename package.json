@@ -42,6 +42,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "latest",
+    "crypto": "1.0.1",
     "embla-carousel-react": "latest",
     "google-maps": "latest",
     "input-otp": "latest",
@@ -57,7 +58,8 @@
     "sonner": "latest",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
-    "vaul": "latest"
+    "vaul": "latest",
+    "webcrypto": "latest"
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
