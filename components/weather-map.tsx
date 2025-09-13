@@ -154,7 +154,7 @@ export function WeatherMap({
           </Button>
         </div>
 
-        <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-weather-blue/20 max-w-[200px]">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-weather-blue/20 max-w-[200px]">
           <div className="flex items-center gap-2 mb-2">
             <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} alt={description} className="w-10 h-10" />
             <div>
