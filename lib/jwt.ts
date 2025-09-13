@@ -7,15 +7,19 @@ export interface JWTPayload {
   iat: number
 }
 
-const JWT_SECRET = process.env.JWT_SECRET
+function getJWTSecret(): string {
+  const JWT_SECRET = process.env.JWT_SECRET
 
-if (!JWT_SECRET) {
-  console.error("JWT_SECRET environment variable is not set")
-  throw new Error("JWT_SECRET is required for authentication")
-}
+  if (!JWT_SECRET) {
+    console.error("JWT_SECRET environment variable is not set")
+    throw new Error("JWT_SECRET is required for authentication")
+  }
 
-if (JWT_SECRET === "your-secret-key-change-in-production") {
-  console.warn("WARNING: Using default JWT_SECRET. Please change this in production!")
+  if (JWT_SECRET === "your-secret-key-change-in-production") {
+    console.warn("WARNING: Using default JWT_SECRET. Please change this in production!")
+  }
+
+  return JWT_SECRET
 }
 
 // Convert string to ArrayBuffer
@@ -47,6 +51,8 @@ function base64UrlToArrayBuffer(base64url: string): ArrayBuffer {
 }
 
 export async function signJWT(payload: Omit<JWTPayload, "exp" | "iat">): Promise<string> {
+  const JWT_SECRET = getJWTSecret()
+
   if (!payload.userId || !payload.email) {
     throw new Error("userId and email are required in JWT payload")
   }
@@ -86,6 +92,8 @@ export async function signJWT(payload: Omit<JWTPayload, "exp" | "iat">): Promise
 
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
+    const JWT_SECRET = getJWTSecret()
+
     if (!token || typeof token !== "string") {
       return null
     }
