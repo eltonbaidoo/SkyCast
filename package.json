@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@googlemaps/react-wrapper": "^1.1.42",
+    "@googlemaps/react-wrapper": "latest",
     "@neondatabase/serverless": "latest",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
@@ -43,8 +43,7 @@
     "clsx": "^2.1.1",
     "cmdk": "latest",
     "embla-carousel-react": "latest",
-    "google-maps": "4.3.3",
-    "google.maps": "latest",
+    "google-maps": "latest",
     "input-otp": "latest",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
