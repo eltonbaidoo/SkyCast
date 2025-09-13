@@ -106,3 +106,28 @@ export async function deleteFavorite(favoriteId: string): Promise<{ success: boo
     return { success: false, error: "Internal server error" }
   }
 }
+
+export async function addToFavorites(cityName: string, lat: number, lon: number, country?: string): Promise<boolean> {
+  try {
+    const result = await saveFavorite({
+      city_name: cityName,
+      lat,
+      lon,
+      country: country || "",
+    })
+    return result.success
+  } catch (error) {
+    console.error("Error in addToFavorites:", error)
+    return false
+  }
+}
+
+export async function removeFromFavorites(favoriteId: string): Promise<boolean> {
+  try {
+    const result = await deleteFavorite(favoriteId)
+    return result.success
+  } catch (error) {
+    console.error("Error in removeFromFavorites:", error)
+    return false
+  }
+}
