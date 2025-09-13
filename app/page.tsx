@@ -16,6 +16,7 @@ import { GeolocationButton } from "@/components/geolocation-button"
 import { PWARegister } from "@/components/pwa-register"
 import { CircularDecorations } from "@/components/circular-decorations"
 import { AuthButton } from "@/components/auth-button"
+import { TemperatureSlider } from "@/components/temperature-slider"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/lib/auth-context"
 import { useUserPreferences } from "@/lib/user-preferences-context"
@@ -401,12 +402,13 @@ export default function WeatherApp() {
                         Feels like {getTemperature(weather.main.feels_like)}
                       </div>
                       {weather.main.temp_min !== undefined && weather.main.temp_max !== undefined && (
-                        <div className="text-xs text-foreground/60 mt-1 font-medium">
-                          <span className="inline-flex items-center gap-1">
-                            <span>H: {getTemperature(weather.main.temp_max)}</span>
-                            <span className="text-foreground/40">•</span>
-                            <span>L: {getTemperature(weather.main.temp_min)}</span>
-                          </span>
+                        <div className="mt-2 max-w-[200px] ml-auto">
+                          <TemperatureSlider
+                            current={isFahrenheit ? convertToFahrenheit(weather.main.temp) : weather.main.temp}
+                            min={isFahrenheit ? convertToFahrenheit(weather.main.temp_min) : weather.main.temp_min}
+                            max={isFahrenheit ? convertToFahrenheit(weather.main.temp_max) : weather.main.temp_max}
+                            unit={isFahrenheit ? "°F" : "°C"}
+                          />
                         </div>
                       )}
                     </div>
