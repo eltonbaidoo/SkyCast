@@ -350,22 +350,24 @@ export default function WeatherApp() {
             <TabsList className="grid w-full grid-cols-3 mb-4 bg-muted/70 dark:bg-gray-700/70 p-1">
               <TabsTrigger
                 value="current"
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-weather-blue"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-weather-blue text-xs md:text-sm"
               >
                 Current
               </TabsTrigger>
               <TabsTrigger
                 value="forecast"
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-weather-blue"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-weather-blue text-xs md:text-sm"
               >
-                5-Day Forecast
+                <span className="hidden sm:inline">5-Day Forecast</span>
+                <span className="sm:hidden">5-Day</span>
               </TabsTrigger>
               <TabsTrigger
                 value="map"
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-weather-blue"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-weather-blue text-xs md:text-sm"
               >
-                <Map className="h-4 w-4 mr-2 inline" />
-                Map View
+                <Map className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2 inline" />
+                <span className="hidden sm:inline">Map View</span>
+                <span className="sm:hidden">Map</span>
               </TabsTrigger>
             </TabsList>
 
@@ -377,11 +379,11 @@ export default function WeatherApp() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-2xl flex items-center text-weather-blue dark:text-weather-lightBlue">
-                        <MapPin className="h-5 w-5 mr-2" />
+                      <CardTitle className="text-lg md:text-2xl flex items-center text-weather-blue dark:text-weather-lightBlue">
+                        <MapPin className="h-4 w-4 md:h-5 md:w-5 mr-2" />
                         {weather.name}, {weather.sys.country}
                       </CardTitle>
-                      <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs md:text-sm">
                         <span>
                           {new Date().toLocaleDateString("en-US", {
                             weekday: "long",
@@ -395,14 +397,14 @@ export default function WeatherApp() {
                       </CardDescription>
                     </div>
                     <div className="text-right">
-                      <div className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-weather-blue to-weather-teal dark:from-weather-lightBlue dark:to-weather-cyan">
+                      <div className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-weather-blue to-weather-teal dark:from-weather-lightBlue dark:to-weather-cyan">
                         {getTemperature(weather.main.temp)}
                       </div>
-                      <div className="text-sm text-foreground/70">
+                      <div className="text-xs md:text-sm text-foreground/70">
                         Feels like {getTemperature(weather.main.feels_like)}
                       </div>
                       {weather.main.temp_min !== undefined && weather.main.temp_max !== undefined && (
-                        <div className="mt-2 max-w-[200px] ml-auto">
+                        <div className="mt-2 max-w-[150px] md:max-w-[200px] ml-auto">
                           <TemperatureSlider
                             current={isFahrenheit ? convertToFahrenheit(weather.main.temp) : weather.main.temp}
                             min={isFahrenheit ? convertToFahrenheit(weather.main.temp_min) : weather.main.temp_min}
@@ -415,39 +417,41 @@ export default function WeatherApp() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-2 md:gap-4 sm:grid-cols-4">
                     <div
-                      className={`flex flex-col items-center p-4 rounded-2xl transition-all duration-150 ease-out hover:shadow-lg hover:scale-105 glass-interactive ${getWeatherCardColor(weather.weather[0].main)}`}
+                      className={`flex flex-col items-center p-2 md:p-4 rounded-2xl transition-all duration-150 ease-out hover:shadow-lg hover:scale-105 glass-interactive ${getWeatherCardColor(weather.weather[0].main)}`}
                     >
-                      <div className="bg-white/50 dark:bg-gray-800/50 p-2 rounded-full mb-2">
+                      <div className="bg-white/50 dark:bg-gray-800/50 p-1 md:p-2 rounded-full mb-2">
                         <img
                           src={getWeatherIcon(weather.weather[0].icon) || "/placeholder.svg"}
                           alt={weather.weather[0].description}
-                          className="w-16 h-16"
+                          className="w-10 h-10 md:w-16 md:h-16"
                         />
                       </div>
-                      <span className="text-sm font-medium capitalize">{weather.weather[0].description}</span>
+                      <span className="text-xs md:text-sm font-medium capitalize text-center">
+                        {weather.weather[0].description}
+                      </span>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-4 bg-weather-blue/10 dark:bg-weather-blue/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
-                      <span className="text-sm text-muted-foreground">Humidity</span>
-                      <span className="text-xl font-medium">{weather.main.humidity}%</span>
+                    <div className="flex flex-col items-center justify-center p-2 md:p-4 bg-weather-blue/10 dark:bg-weather-blue/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
+                      <span className="text-xs md:text-sm text-muted-foreground">Humidity</span>
+                      <span className="text-lg md:text-xl font-medium">{weather.main.humidity}%</span>
                       {weather.uvi !== undefined && (
-                        <div className="mt-2 text-center">
+                        <div className="mt-1 md:mt-2 text-center">
                           <span className="text-xs text-muted-foreground">UV Index</span>
-                          <div className="text-sm font-medium">{Math.round(weather.uvi)}</div>
+                          <div className="text-xs md:text-sm font-medium">{Math.round(weather.uvi)}</div>
                         </div>
                       )}
                     </div>
-                    <div className="flex flex-col items-center justify-center p-4 bg-weather-cyan/10 dark:bg-weather-cyan/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
-                      <span className="text-sm text-muted-foreground">Wind</span>
-                      <span className="text-xl font-medium">{getWindSpeed(weather.wind.speed)}</span>
+                    <div className="flex flex-col items-center justify-center p-2 md:p-4 bg-weather-cyan/10 dark:bg-weather-cyan/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
+                      <span className="text-xs md:text-sm text-muted-foreground">Wind</span>
+                      <span className="text-lg md:text-xl font-medium">{getWindSpeed(weather.wind.speed)}</span>
                       {weather.wind.deg !== undefined && (
                         <span className="text-xs text-muted-foreground mt-1">{getWindDirection(weather.wind.deg)}</span>
                       )}
                     </div>
-                    <div className="flex flex-col items-center justify-center p-4 bg-weather-teal/10 dark:bg-weather-teal/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
-                      <span className="text-sm text-muted-foreground">Pressure</span>
-                      <span className="text-xl font-medium">{weather.main.pressure} hPa</span>
+                    <div className="flex flex-col items-center justify-center p-2 md:p-4 bg-weather-teal/10 dark:bg-weather-teal/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
+                      <span className="text-xs md:text-sm text-muted-foreground">Pressure</span>
+                      <span className="text-lg md:text-xl font-medium">{weather.main.pressure} hPa</span>
                     </div>
                   </div>
                 </CardContent>
@@ -460,12 +464,12 @@ export default function WeatherApp() {
                 <div className="absolute bottom-0 left-0 w-32 h-32 -mb-8 -ml-8 bg-weather-teal/10 rounded-full blur-2xl"></div>
 
                 <CardHeader>
-                  <CardTitle className="text-weather-blue dark:text-weather-lightBlue">
+                  <CardTitle className="text-lg md:text-xl text-weather-blue dark:text-weather-lightBlue">
                     5-Day Forecast for {weather.name}
                   </CardTitle>
-                  <CardDescription className="flex items-center gap-2">
+                  <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs md:text-sm">
                     Weather forecast for the next 5 days
-                    <span className="inline-flex items-center">
+                    <span className="hidden sm:inline-flex items-center">
                       <span className="mx-2">•</span>
                       <Clock className="h-4 w-4 mr-1" />
                       Local time: <LocalTime timezone={weather.timezone} />
@@ -473,24 +477,26 @@ export default function WeatherApp() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+                  <div className="grid grid-cols-2 gap-2 md:gap-4 sm:grid-cols-5">
                     {forecast.map((day, index) => (
                       <div
                         key={index}
-                        className={`flex flex-col items-center p-4 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg hover:scale-105 ${getWeatherCardColor(day.weather[0].main)}`}
+                        className={`flex flex-col items-center p-2 md:p-4 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg hover:scale-105 ${getWeatherCardColor(day.weather[0].main)}`}
                       >
-                        <div className="font-medium">{formatDate(day.dt)}</div>
+                        <div className="font-medium text-xs md:text-sm">{formatDate(day.dt)}</div>
                         <div className="bg-white/50 dark:bg-gray-800/50 p-1 rounded-full my-2">
                           <img
                             src={getWeatherIcon(day.weather[0].icon) || "/placeholder.svg"}
                             alt={day.weather[0].description}
-                            className="w-12 h-12"
+                            className="w-8 h-8 md:w-12 md:h-12"
                           />
                         </div>
-                        <div className="text-lg font-bold text-weather-blue dark:text-weather-lightBlue">
+                        <div className="text-sm md:text-lg font-bold text-weather-blue dark:text-weather-lightBlue">
                           {getTemperature(day.main.temp)}
                         </div>
-                        <div className="text-xs text-muted-foreground capitalize">{day.weather[0].description}</div>
+                        <div className="text-xs text-muted-foreground capitalize text-center">
+                          {day.weather[0].description}
+                        </div>
                         <div className="text-xs text-muted-foreground mt-1">
                           <Wind className="h-3 w-3 inline mr-1" />
                           {getWindSpeed(day.wind.speed)}
