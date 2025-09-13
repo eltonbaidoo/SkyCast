@@ -40,19 +40,32 @@ export function WeatherMap({
     const loadMapData = async () => {
       try {
         setIsLoading(true)
+        setError("")
+
+        if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
+          throw new Error("Invalid coordinates")
+        }
+
         const mapData = await getMapEmbedUrl(lat, lon, city, country)
         setEmbedUrl(mapData.embedUrl)
         setDirectUrl(mapData.directUrl)
-        setError("")
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load map")
+        console.error("Map loading error:", err)
+        const errorMessage = err instanceof Error ? err.message : "Failed to load map"
+        setError(errorMessage)
+
+        toast({
+          title: "Map Error",
+          description: errorMessage,
+          variant: "destructive",
+        })
       } finally {
         setIsLoading(false)
       }
     }
 
     loadMapData()
-  }, [lat, lon, city, country])
+  }, [lat, lon, city, country, toast])
 
   const getUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
@@ -63,6 +76,11 @@ export function WeatherMap({
       })
       return
     }
+
+    toast({
+      title: "Getting Location",
+      description: "Please allow location access...",
+    })
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -81,6 +99,7 @@ export function WeatherMap({
             description: `Getting weather for ${address}`,
           })
         } catch (error) {
+          console.error("Reverse geocoding error:", error)
           if (onLocationSelect) {
             onLocationSelect(userLat, userLon, "Your Location")
           }
@@ -92,11 +111,31 @@ export function WeatherMap({
         }
       },
       (error) => {
+        console.error("Geolocation error:", error)
+        let errorMessage = "Unable to get your location"
+
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Location access denied by user"
+            break
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Location information unavailable"
+            break
+          case error.TIMEOUT:
+            errorMessage = "Location request timed out"
+            break
+        }
+
         toast({
           title: "Location Error",
-          description: "Unable to get your location",
+          description: errorMessage,
           variant: "destructive",
         })
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000,
       },
     )
   }, [onLocationSelect, toast])
@@ -126,18 +165,32 @@ export function WeatherMap({
   return (
     <Card className="overflow-hidden border-2 border-weather-blue/20 shadow-lg rounded-[2rem]">
       <div className="h-[400px] w-full relative">
-        <iframe
-          width="100%"
-          height="100%"
-          frameBorder="0"
-          scrolling="no"
-          marginHeight={0}
-          marginWidth={0}
-          src={embedUrl}
-          style={{ border: 0, borderRadius: "1.5rem" }}
-          title={`Map of ${city}, ${country}`}
-          loading="lazy"
-        />
+        {embedUrl ? (
+          <iframe
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            scrolling="no"
+            marginHeight={0}
+            marginWidth={0}
+            src={embedUrl}
+            style={{ border: 0, borderRadius: "1.5rem" }}
+            title={`Map of ${city}, ${country}`}
+            loading="lazy"
+            onError={() => {
+              setError("Failed to load map iframe")
+              toast({
+                title: "Map Display Error",
+                description: "Unable to display the map",
+                variant: "destructive",
+              })
+            }}
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 rounded-[1.5rem]">
+            <p className="text-gray-500">Map unavailable</p>
+          </div>
+        )}
 
         <div className="absolute top-4 right-4 flex flex-col gap-2">
           <Button size="sm" variant="secondary" onClick={getUserLocation} className="glass-button">
