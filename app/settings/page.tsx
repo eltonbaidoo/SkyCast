@@ -18,6 +18,7 @@ export default function SettingsPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { preferences, updatePreferences, isLoading } = useUserPreferences()
+  const [isClient, setIsClient] = useState(false)
 
   const [formData, setFormData] = useState({
     temperature_unit: "celsius" as "celsius" | "fahrenheit",
@@ -26,6 +27,10 @@ export default function SettingsPage() {
     refresh_interval: 300000, // 5 minutes in milliseconds
     theme: "system" as "light" | "dark" | "system",
   })
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
     if (preferences) {
@@ -39,6 +44,12 @@ export default function SettingsPage() {
     }
   }, [preferences])
 
+  useEffect(() => {
+    if (isClient && !user) {
+      router.push("/")
+    }
+  }, [user, router, isClient])
+
   const handleSave = async () => {
     await updatePreferences(formData)
     router.push("/")
@@ -49,8 +60,7 @@ export default function SettingsPage() {
     router.push(`/?lat=${lat}&lon=${lon}&city=${encodeURIComponent(name)}`)
   }
 
-  if (!user) {
-    router.push("/")
+  if (!isClient || !user) {
     return null
   }
 

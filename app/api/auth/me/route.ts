@@ -3,6 +3,9 @@ import { cookies } from "next/headers"
 import { verifyJWT } from "@/lib/jwt"
 import { getUserById } from "@/lib/auth"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+
 export async function GET(request: NextRequest) {
   try {
     const token = cookies().get("auth-token")?.value

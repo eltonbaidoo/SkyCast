@@ -48,15 +48,21 @@ export default function WeatherApp() {
   const [error, setError] = useState("")
   const [useMapFallback, setUseMapFallback] = useState(false)
   const [activeTab, setActiveTab] = useState("current")
+  const [isClient, setIsClient] = useState(false)
   const { toast } = useToast()
   const { user } = useAuth()
   const { preferences, updatePreferences } = useUserPreferences()
 
-  const isFahrenheit = preferences?.temperature_unit === "fahrenheit"
-  const isMph = preferences?.wind_unit === "mph" || (!user && localStorage.getItem("isMph") === "true")
-
-  // Initialize with saved preferences or defaults
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  const isFahrenheit = preferences?.temperature_unit === "fahrenheit"
+  const isMph = preferences?.wind_unit === "mph" || (!user && isClient && localStorage.getItem("isMph") === "true")
+
+  useEffect(() => {
+    if (!isClient) return
+
     const lastCity = localStorage.getItem("lastSearchedCity")
     if (lastCity) {
       setSearchQuery(lastCity)
@@ -66,30 +72,31 @@ export default function WeatherApp() {
     if (savedTab) {
       setActiveTab(savedTab)
     }
-  }, [])
+  }, [isClient])
 
-  // Fetch weather when searchQuery changes
   useEffect(() => {
     if (searchQuery) {
       fetchWeather(searchQuery)
     }
   }, [searchQuery])
 
-  // Cache weather data for offline use
   useEffect(() => {
-    if (weather && "serviceWorker" in navigator && navigator.serviceWorker.controller) {
+    if (!isClient || !weather) return
+
+    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
         type: "CACHE_WEATHER_DATA",
         city: searchQuery,
         data: weather,
       })
     }
-  }, [weather, searchQuery])
+  }, [weather, searchQuery, isClient])
 
-  // Save active tab preference
   useEffect(() => {
-    localStorage.setItem("activeTab", activeTab)
-  }, [activeTab])
+    if (isClient) {
+      localStorage.setItem("activeTab", activeTab)
+    }
+  }, [activeTab, isClient])
 
   const fetchWeather = async (query) => {
     if (!query) return
@@ -97,7 +104,9 @@ export default function WeatherApp() {
     setLoading(true)
     setError("")
     try {
-      localStorage.setItem("lastSearchedCity", query)
+      if (isClient) {
+        localStorage.setItem("lastSearchedCity", query)
+      }
 
       const response = await fetch(`/api/weather?city=${encodeURIComponent(query)}&type=weather`)
 
@@ -151,7 +160,7 @@ export default function WeatherApp() {
         temperature_unit: checked ? "fahrenheit" : "celsius",
       })
     }
-    if (!user) {
+    if (!user && isClient) {
       localStorage.setItem("isFahrenheit", checked.toString())
     }
   }
@@ -162,7 +171,7 @@ export default function WeatherApp() {
         wind_unit: checked ? "mph" : "kmh",
       })
     }
-    if (!user) {
+    if (!user && isClient) {
       localStorage.setItem("isMph", checked.toString())
     }
   }
@@ -252,7 +261,9 @@ export default function WeatherApp() {
 
       if (address) {
         setSearchQuery(address)
-        localStorage.setItem("lastSearchedCity", address)
+        if (isClient) {
+          localStorage.setItem("lastSearchedCity", address)
+        }
       }
 
       const forecastResponse = await fetch(`/api/weather?lat=${lat}&lon=${lon}&type=forecast`)
