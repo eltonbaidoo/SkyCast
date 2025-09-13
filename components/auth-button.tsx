@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { User, LogOut, Settings } from "lucide-react"
 import { AuthModal } from "./auth-modal"
 import { useAuth } from "@/lib/auth-context"
+import { useRouter } from "next/navigation"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ import {
 export function AuthButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { user, isLoading, signOut } = useAuth()
+  const router = useRouter()
 
   if (isLoading) {
     return (
@@ -46,7 +48,10 @@ export function AuthButton() {
         <DropdownMenuContent className="w-56 glass-panel border neon-border bg-black/80 backdrop-blur-md">
           <DropdownMenuLabel className="text-amber-400">My Account</DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-amber-500/20" />
-          <DropdownMenuItem className="text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 cursor-pointer">
+          <DropdownMenuItem
+            className="text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 cursor-pointer"
+            onClick={() => router.push("/settings")}
+          >
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </DropdownMenuItem>

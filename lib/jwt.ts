@@ -1,11 +1,22 @@
 export interface JWTPayload {
   userId: string
   email: string
+  name?: string
+  role?: string
   exp: number
   iat: number
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production"
+const JWT_SECRET = process.env.JWT_SECRET
+
+if (!JWT_SECRET) {
+  console.error("JWT_SECRET environment variable is not set")
+  throw new Error("JWT_SECRET is required for authentication")
+}
+
+if (JWT_SECRET === "your-secret-key-change-in-production") {
+  console.warn("WARNING: Using default JWT_SECRET. Please change this in production!")
+}
 
 // Convert string to ArrayBuffer
 function stringToArrayBuffer(str: string): ArrayBuffer {
@@ -36,6 +47,10 @@ function base64UrlToArrayBuffer(base64url: string): ArrayBuffer {
 }
 
 export async function signJWT(payload: Omit<JWTPayload, "exp" | "iat">): Promise<string> {
+  if (!payload.userId || !payload.email) {
+    throw new Error("userId and email are required in JWT payload")
+  }
+
   const now = Math.floor(Date.now() / 1000)
   const fullPayload: JWTPayload = {
     ...payload,
@@ -50,23 +65,37 @@ export async function signJWT(payload: Omit<JWTPayload, "exp" | "iat">): Promise
 
   const data = `${encodedHeader}.${encodedPayload}`
 
-  const key = await crypto.subtle.importKey(
-    "raw",
-    stringToArrayBuffer(JWT_SECRET),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  )
+  try {
+    const key = await crypto.subtle.importKey(
+      "raw",
+      stringToArrayBuffer(JWT_SECRET),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"],
+    )
 
-  const signature = await crypto.subtle.sign("HMAC", key, stringToArrayBuffer(data))
-  const encodedSignature = arrayBufferToBase64Url(signature)
+    const signature = await crypto.subtle.sign("HMAC", key, stringToArrayBuffer(data))
+    const encodedSignature = arrayBufferToBase64Url(signature)
 
-  return `${data}.${encodedSignature}`
+    return `${data}.${encodedSignature}`
+  } catch (error) {
+    console.error("JWT signing error:", error)
+    throw new Error("Failed to sign JWT token")
+  }
 }
 
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
-    const [encodedHeader, encodedPayload, encodedSignature] = token.split(".")
+    if (!token || typeof token !== "string") {
+      return null
+    }
+
+    const parts = token.split(".")
+    if (parts.length !== 3) {
+      return null
+    }
+
+    const [encodedHeader, encodedPayload, encodedSignature] = parts
 
     if (!encodedHeader || !encodedPayload || !encodedSignature) {
       return null
@@ -91,9 +120,13 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
 
     const payload = JSON.parse(new TextDecoder().decode(base64UrlToArrayBuffer(encodedPayload))) as JWTPayload
 
-    // Check expiration
     const now = Math.floor(Date.now() / 1000)
     if (payload.exp < now) {
+      return null
+    }
+
+    // Validate required fields
+    if (!payload.userId || !payload.email) {
       return null
     }
 
@@ -103,3 +136,22 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
     return null
   }
 }
+
+export function decodeJWT(token: string): JWTPayload | null {
+  try {
+    const parts = token.split(".")
+    if (parts.length !== 3) {
+      return null
+    }
+
+    const [, encodedPayload] = parts
+    const payload = JSON.parse(new TextDecoder().decode(base64UrlToArrayBuffer(encodedPayload))) as JWTPayload
+
+    return payload
+  } catch (error) {
+    console.error("JWT decode error:", error)
+    return null
+  }
+}
+
+export { verifyJWT as verifyToken }

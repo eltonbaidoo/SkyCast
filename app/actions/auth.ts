@@ -4,7 +4,11 @@ import { createUser, authenticateUser } from "@/lib/auth"
 import { cookies } from "next/headers"
 import { signJWT } from "@/lib/jwt"
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production"
+const JWT_SECRET = process.env.JWT_SECRET
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable is required")
+}
 
 export async function signUp(formData: FormData) {
   try {
@@ -22,21 +26,29 @@ export async function signUp(formData: FormData) {
       return { error: "Invalid email format" }
     }
 
-    // Validate password strength
     if (password.length < 8) {
       return { error: "Password must be at least 8 characters" }
     }
 
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      return { error: "Password must contain at least one uppercase letter, one lowercase letter, and one number" }
+    }
+
     const user = await createUser(name, email, password)
 
-    const token = await signJWT({ userId: user.id, email: user.email })
+    const token = await signJWT({
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      role: "user",
+    })
 
-    // Set cookie
     cookies().set("auth-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
     })
 
     return { success: true, user }
@@ -61,14 +73,19 @@ export async function signIn(formData: FormData) {
       return { error: "Invalid email or password" }
     }
 
-    const token = await signJWT({ userId: user.id, email: user.email })
+    const token = await signJWT({
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      role: "user",
+    })
 
-    // Set cookie
     cookies().set("auth-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
     })
 
     return { success: true, user }
@@ -79,6 +96,51 @@ export async function signIn(formData: FormData) {
 }
 
 export async function signOut() {
-  cookies().delete("auth-token")
+  cookies().set("auth-token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+    path: "/",
+  })
+
   return { success: true }
+}
+
+export async function refreshToken() {
+  try {
+    const token = cookies().get("auth-token")?.value
+
+    if (!token) {
+      return { error: "No token found" }
+    }
+
+    const { verifyJWT } = await import("@/lib/jwt")
+    const decoded = await verifyJWT(token)
+
+    if (!decoded) {
+      return { error: "Invalid token" }
+    }
+
+    // Generate new token with extended expiry
+    const newToken = await signJWT({
+      userId: decoded.userId,
+      email: decoded.email,
+      name: decoded.name || "",
+      role: "user",
+    })
+
+    cookies().set("auth-token", newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
+    })
+
+    return { success: true }
+  } catch (error) {
+    console.error("Token refresh error:", error)
+    return { error: "Failed to refresh token" }
+  }
 }
