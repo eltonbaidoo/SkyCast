@@ -86,7 +86,7 @@ export function FavoritesManager({ onLocationSelect }: FavoritesManagerProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         {favorites.length === 0 ? (
-          <div className="text-center py-8 text-white/70">
+          <div className="text-center py-8 text-ring">
             <Heart className="w-12 h-12 mx-auto mb-3 text-white/30" />
             <p>No favorite locations yet</p>
             <p className="text-sm">Add locations to your favorites for quick access</p>
