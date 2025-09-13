@@ -22,6 +22,7 @@ interface WeatherData {
     deg?: number
   }
   timezone: number
+  uvi?: number
 }
 
 interface ForecastData {
@@ -107,7 +108,24 @@ async function fetchOpenWeather(
       throw new Error(errorData.message || `HTTP ${response.status}`)
     }
 
-    return await response.json()
+    const weatherData = await response.json()
+
+    if (type === "weather" && weatherData.coord) {
+      try {
+        const uvResponse = await fetch(
+          `https://api.openweathermap.org/data/2.5/uvi?lat=${weatherData.coord.lat}&lon=${weatherData.coord.lon}&appid=${apiKey}`,
+        )
+        if (uvResponse.ok) {
+          const uvData = await uvResponse.json()
+          weatherData.uvi = uvData.value
+        }
+      } catch (uvError) {
+        console.warn("Failed to fetch UV index:", uvError)
+        // Continue without UV data
+      }
+    }
+
+    return weatherData
   } catch (error) {
     console.error("OpenWeather API error:", error)
     throw error

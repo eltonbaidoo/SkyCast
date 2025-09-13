@@ -401,8 +401,12 @@ export default function WeatherApp() {
                         Feels like {getTemperature(weather.main.feels_like)}
                       </div>
                       {weather.main.temp_min !== undefined && weather.main.temp_max !== undefined && (
-                        <div className="text-xs text-foreground/60 mt-1">
-                          H: {getTemperature(weather.main.temp_max)} L: {getTemperature(weather.main.temp_min)}
+                        <div className="text-xs text-foreground/60 mt-1 font-medium">
+                          <span className="inline-flex items-center gap-1">
+                            <span>H: {getTemperature(weather.main.temp_max)}</span>
+                            <span className="text-foreground/40">•</span>
+                            <span>L: {getTemperature(weather.main.temp_min)}</span>
+                          </span>
                         </div>
                       )}
                     </div>
@@ -425,6 +429,12 @@ export default function WeatherApp() {
                     <div className="flex flex-col items-center justify-center p-4 bg-weather-blue/10 dark:bg-weather-blue/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
                       <span className="text-sm text-muted-foreground">Humidity</span>
                       <span className="text-xl font-medium">{weather.main.humidity}%</span>
+                      {weather.uvi !== undefined && (
+                        <div className="mt-2 text-center">
+                          <span className="text-xs text-muted-foreground">UV Index</span>
+                          <div className="text-sm font-medium">{Math.round(weather.uvi)}</div>
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-col items-center justify-center p-4 bg-weather-cyan/10 dark:bg-weather-cyan/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
                       <span className="text-sm text-muted-foreground">Wind</span>
