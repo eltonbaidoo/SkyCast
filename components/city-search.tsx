@@ -22,10 +22,8 @@ export function CitySearch({ onSearch, loading }: CitySearchProps) {
 
   // Initialize with last searched city
   useEffect(() => {
-    const lastCity = localStorage.getItem("lastSearchedCity")
-    if (lastCity) {
-      setCity(lastCity)
-    }
+    // Removed the automatic loading of lastSearchedCity
+    // Search bar will now start empty
   }, [])
 
   useEffect(() => {

@@ -9,13 +9,18 @@ interface WeatherData {
     feels_like: number
     humidity: number
     pressure: number
+    temp_min?: number
+    temp_max?: number
   }
   weather: Array<{
     main: string
     description: string
     icon: string
   }>
-  wind: { speed: number }
+  wind: {
+    speed: number
+    deg?: number
+  }
   timezone: number
 }
 
@@ -27,13 +32,18 @@ interface ForecastData {
       feels_like: number
       humidity: number
       pressure: number
+      temp_min?: number
+      temp_max?: number
     }
     weather: Array<{
       main: string
       description: string
       icon: string
     }>
-    wind: { speed: number }
+    wind: {
+      speed: number
+      deg?: number
+    }
   }>
 }
 

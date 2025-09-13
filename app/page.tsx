@@ -52,20 +52,15 @@ export default function WeatherApp() {
   const { preferences, updatePreferences } = useUserPreferences()
 
   const isFahrenheit = preferences?.temperature_unit === "fahrenheit"
-  const isMph = false // Keep wind speed in km/h for now, can be added to preferences later
+  const isMph = preferences?.wind_unit === "mph" || (!user && localStorage.getItem("isMph") === "true")
 
   // Initialize with saved preferences or defaults
   useEffect(() => {
-    // Load last searched city from localStorage (keep this for non-authenticated users)
     const lastCity = localStorage.getItem("lastSearchedCity")
     if (lastCity) {
       setSearchQuery(lastCity)
-    } else {
-      // Default to London if no saved city
-      setSearchQuery("London")
     }
 
-    // Load active tab preference from localStorage
     const savedTab = localStorage.getItem("activeTab")
     if (savedTab) {
       setActiveTab(savedTab)
@@ -101,10 +96,8 @@ export default function WeatherApp() {
     setLoading(true)
     setError("")
     try {
-      // Save the searched city to localStorage
       localStorage.setItem("lastSearchedCity", query)
 
-      // Use our server API route instead of directly calling OpenWeather API
       const response = await fetch(`/api/weather?city=${encodeURIComponent(query)}&type=weather`)
 
       if (!response.ok) {
@@ -115,7 +108,6 @@ export default function WeatherApp() {
       const data = await response.json()
       setWeather(data)
 
-      // Fetch 5-day forecast using our server API route
       const forecastResponse = await fetch(`/api/weather?city=${encodeURIComponent(query)}&type=forecast`)
 
       if (!forecastResponse.ok) {
@@ -125,7 +117,6 @@ export default function WeatherApp() {
 
       const forecastData = await forecastResponse.json()
 
-      // Group forecast by day (taking noon forecast for each day)
       const dailyForecasts = forecastData.list.filter((item, index) => index % 8 === 0).slice(0, 5)
 
       setForecast(dailyForecasts)
@@ -159,9 +150,19 @@ export default function WeatherApp() {
         temperature_unit: checked ? "fahrenheit" : "celsius",
       })
     }
-    // For non-authenticated users, still use localStorage as fallback
     if (!user) {
       localStorage.setItem("isFahrenheit", checked.toString())
+    }
+  }
+
+  const handleWindSpeedToggle = async (checked: boolean) => {
+    if (user && preferences) {
+      await updatePreferences({
+        wind_unit: checked ? "mph" : "kmh",
+      })
+    }
+    if (!user) {
+      localStorage.setItem("isMph", checked.toString())
     }
   }
 
@@ -190,9 +191,33 @@ export default function WeatherApp() {
   }
 
   const getWindSpeed = (speed) => {
-    // OpenWeather API returns wind speed in m/s, convert to km/h first
     const kmh = speed * 3.6
     return isMph ? `${Math.round(convertToMph(kmh))} mph` : `${Math.round(kmh)} km/h`
+  }
+
+  const getWindDirection = (degrees) => {
+    if (degrees === undefined || degrees === null) return "N/A"
+
+    const directions = [
+      "N",
+      "NNE",
+      "NE",
+      "ENE",
+      "E",
+      "ESE",
+      "SE",
+      "SSE",
+      "S",
+      "SSW",
+      "SW",
+      "WSW",
+      "W",
+      "WNW",
+      "NW",
+      "NNW",
+    ]
+    const index = Math.round(degrees / 22.5) % 16
+    return directions[index]
   }
 
   const getWeatherCardColor = (condition) => {
@@ -214,7 +239,6 @@ export default function WeatherApp() {
     setError("")
 
     try {
-      // Use coordinates to fetch weather data
       const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}&type=weather`)
 
       if (!response.ok) {
@@ -225,13 +249,11 @@ export default function WeatherApp() {
       const data = await response.json()
       setWeather(data)
 
-      // Update search query with the location name
       if (address) {
         setSearchQuery(address)
         localStorage.setItem("lastSearchedCity", address)
       }
 
-      // Fetch forecast data
       const forecastResponse = await fetch(`/api/weather?lat=${lat}&lon=${lon}&type=forecast`)
 
       if (forecastResponse.ok) {
@@ -302,7 +324,7 @@ export default function WeatherApp() {
                     <Label htmlFor="wind-unit" className="text-sm font-medium">
                       km/h
                     </Label>
-                    <Switch id="wind-unit" checked={isMph} onCheckedChange={() => {}} disabled />
+                    <Switch id="wind-unit" checked={isMph} onCheckedChange={handleWindSpeedToggle} />
                     <Label htmlFor="wind-unit" className="text-sm font-medium">
                       mph
                     </Label>
@@ -367,9 +389,7 @@ export default function WeatherApp() {
                             day: "numeric",
                           })}
                         </span>
-                        {/* Add a separator dot for desktop view */}
                         <span className="hidden sm:block">•</span>
-                        {/* Add the local time component */}
                         <LocalTime timezone={weather.timezone} />
                       </CardDescription>
                     </div>
@@ -380,6 +400,11 @@ export default function WeatherApp() {
                       <div className="text-sm text-foreground/70">
                         Feels like {getTemperature(weather.main.feels_like)}
                       </div>
+                      {weather.main.temp_min !== undefined && weather.main.temp_max !== undefined && (
+                        <div className="text-xs text-foreground/60 mt-1">
+                          H: {getTemperature(weather.main.temp_max)} L: {getTemperature(weather.main.temp_min)}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardHeader>
@@ -404,6 +429,9 @@ export default function WeatherApp() {
                     <div className="flex flex-col items-center justify-center p-4 bg-weather-cyan/10 dark:bg-weather-cyan/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
                       <span className="text-sm text-muted-foreground">Wind</span>
                       <span className="text-xl font-medium">{getWindSpeed(weather.wind.speed)}</span>
+                      {weather.wind.deg !== undefined && (
+                        <span className="text-xs text-muted-foreground mt-1">{getWindDirection(weather.wind.deg)}</span>
+                      )}
                     </div>
                     <div className="flex flex-col items-center justify-center p-4 bg-weather-teal/10 dark:bg-weather-teal/5 rounded-2xl glass-interactive transition-all duration-150 ease-out hover:shadow-lg">
                       <span className="text-sm text-muted-foreground">Pressure</span>

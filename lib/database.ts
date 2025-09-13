@@ -6,6 +6,7 @@ export interface UserPreferences {
   id: string
   user_id: string
   temperature_unit: "celsius" | "fahrenheit"
+  wind_unit: "kmh" | "mph" // Added wind unit preference
   notifications_enabled: boolean
   auto_location: boolean
   refresh_interval: number
@@ -62,6 +63,7 @@ export async function createUserPreferences(
       INSERT INTO user_preferences (
         user_id, 
         temperature_unit, 
+        wind_unit,
         notifications_enabled, 
         auto_location, 
         refresh_interval, 
@@ -71,6 +73,7 @@ export async function createUserPreferences(
       VALUES (
         ${userId},
         ${preferences.temperature_unit || "celsius"},
+        ${preferences.wind_unit || "kmh"},
         ${preferences.notifications_enabled ?? true},
         ${preferences.auto_location ?? true},
         ${preferences.refresh_interval || 300000},
@@ -95,6 +98,7 @@ export async function updateUserPreferences(
       UPDATE user_preferences 
       SET 
         temperature_unit = COALESCE(${preferences.temperature_unit}, temperature_unit),
+        wind_unit = COALESCE(${preferences.wind_unit}, wind_unit),
         notifications_enabled = COALESCE(${preferences.notifications_enabled}, notifications_enabled),
         auto_location = COALESCE(${preferences.auto_location}, auto_location),
         refresh_interval = COALESCE(${preferences.refresh_interval}, refresh_interval),
