@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs"
 import { sql } from "./db"
+import { verifyJWT } from "./jwt"
+import { cookies } from "next/headers"
 
 export interface User {
   id: string
@@ -21,8 +23,7 @@ export async function createUser(name: string, email: string, password: string):
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 12)
 
-  // Create user
-  const userId = crypto.randomUUID()
+  const userId = globalThis.crypto.randomUUID()
   const now = new Date().toISOString()
 
   const result = await sql`
@@ -77,4 +78,25 @@ export async function getUserById(id: string): Promise<User | null> {
   `
 
   return result.length > 0 ? (result[0] as User) : null
+}
+
+export async function getCurrentUser(): Promise<User | null> {
+  try {
+    const token = cookies().get("auth-token")?.value
+
+    if (!token) {
+      return null
+    }
+
+    const decoded = await verifyJWT(token)
+
+    if (!decoded) {
+      return null
+    }
+
+    return await getUserById(decoded.userId)
+  } catch (error) {
+    console.error("Error getting current user:", error)
+    return null
+  }
 }

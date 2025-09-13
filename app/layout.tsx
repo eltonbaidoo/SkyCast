@@ -3,6 +3,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from "@/lib/auth-context"
+import { UserPreferencesProvider } from "@/lib/user-preferences-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -30,10 +31,12 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
-            <main className="min-h-screen bg-radial-gradient from-cyan-50 via-sky-50 to-sky-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 flex flex-col items-center justify-center p-4">
-              {children}
-            </main>
-            <Toaster />
+            <UserPreferencesProvider>
+              <main className="min-h-screen bg-radial-gradient from-cyan-50 via-sky-50 to-sky-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 flex flex-col items-center justify-center p-4">
+                {children}
+              </main>
+              <Toaster />
+            </UserPreferencesProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

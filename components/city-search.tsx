@@ -22,10 +22,8 @@ export function CitySearch({ onSearch, loading }: CitySearchProps) {
 
   // Initialize with last searched city
   useEffect(() => {
-    const lastCity = localStorage.getItem("lastSearchedCity")
-    if (lastCity) {
-      setCity(lastCity)
-    }
+    // Removed the automatic loading of lastSearchedCity
+    // Search bar will now start empty
   }, [])
 
   useEffect(() => {
@@ -109,7 +107,8 @@ export function CitySearch({ onSearch, loading }: CitySearchProps) {
           className="bg-gradient-to-r from-weather-blue to-weather-cyan hover:from-weather-cyan hover:to-weather-blue text-white"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Search className="h-4 w-4 mr-2" />}
-          Search
+          <span className="hidden sm:inline">Search</span>
+          <span className="sr-only">Search for weather</span>
         </Button>
       </form>
 
@@ -122,10 +121,10 @@ export function CitySearch({ onSearch, loading }: CitySearchProps) {
             {suggestions.map((suggestion, index) => (
               <li
                 key={index}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                className="px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center text-sm sm:text-base"
                 onClick={() => handleSuggestionClick(suggestion)}
               >
-                <MapPin className="h-4 w-4 mr-2 text-weather-blue" />
+                <MapPin className="h-4 w-4 mr-2 text-weather-blue flex-shrink-0" />
                 <span>
                   {suggestion.name}, {suggestion.country}
                 </span>
